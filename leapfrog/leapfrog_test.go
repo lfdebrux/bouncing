@@ -18,11 +18,11 @@ func almosteq(x,y float64) bool {
 }
 
 func simplecase(v0,thetadash float64) (p *P) {
-	return NewFromJump(&J{Particle:&Particle{Beta:0,Phi:math.Pi/2},V:v0,Psi:0,ThetaDash:thetadash})
+	return NewFromJump(&J{P:&P{Beta:0,Phi:math.Pi/2},V:v0,Psi:0,ThetaDash:thetadash})
 }
 
 func TestBetaPhi(t *testing.T) {
-	j := &J{Particle:RandParticle()}
+	j := &J{P:RandParticle()}
 	p := simplecase(300,math.Pi/4)
 
 	if !almosteq(p.Beta(),0.0) {

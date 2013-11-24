@@ -1,13 +1,13 @@
 package bouncing
 
 type J struct {
-	*Particle
+	*P
 	V,Psi,ThetaDash float64
 	T float64
 }
 
-func Jump(p *Particle) (*J,*Lost) {
-	j := &J{Particle:p}
+func Jump(p *P) (*J,*Lost) {
+	j := &J{P:p}
 	j.V = RandVelocity(Mass[j.Type],j.Phi)
 	j.Psi,j.ThetaDash = ButlerRandDirection()
 	j.Phi,j.Beta = PositionJump(j.Phi,j.Beta,j.V,j.Psi,j.ThetaDash)
