@@ -6,7 +6,7 @@ type J struct {
 	T float64
 }
 
-func Jump(p *P) (*J,*Lost) {
+func (p *P) Jump() (*J,*Lost) {
 	j := &J{P:p}
 	j.V = RandVelocity(Mass[j.Type],j.Phi)
 	j.Psi,j.ThetaDash = ButlerRandDirection()
