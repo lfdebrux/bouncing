@@ -1,4 +1,4 @@
-package jump
+package bouncing
 
 import "math"
 import "math/rand"

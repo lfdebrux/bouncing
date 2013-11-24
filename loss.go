@@ -1,10 +1,8 @@
-package jump
+package bouncing
 
 import "fmt"
 import "math"
 import "math/rand"
-
-import "github.com/lfdebrux/bouncing/constants"
 
 const TAU = 6.7e4 // seconds
 var FSTABLE = []float64{0.4e-2,0.9e-2,4e-2,11e-2}
@@ -25,17 +23,17 @@ type Lost struct {
 func (l *Lost) Error() string {
 	switch l.HowLost {
 		case ThermalEscape:
-			return fmt.Sprintf("jump: particle lost due to thermal escape, v=%f",l.Jump.V)
+			return fmt.Sprintf("particle lost due to thermal escape, v=%f",l.Jump.V)
 		case Photodestruction:
-			return fmt.Sprintf("jump: particle lost due to photodestruction, t=%f",l.Jump.T)
+			return fmt.Sprintf("particle lost due to photodestruction, t=%f",l.Jump.T)
 		case Capture:
-			return fmt.Sprintf("jump: particle lost due to capture by stable region, phi=%f",l.Jump.Phi)
+			return fmt.Sprintf("particle lost due to capture by stable region, phi=%f",l.Jump.Phi)
 	}
-	return "jump: particle lost"
+	return "particle lost"
 }
 
 func (j *J) IsLost() *Lost {
-	if j.V > constants.VESC {
+	if j.V > VESC {
 		return &Lost{ThermalEscape,j}
 	}
 	if rand.Float64() > math.Exp(-j.T/TAU) {

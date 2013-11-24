@@ -1,7 +1,6 @@
-package jump
+package bouncing
 
 import "math"
-import . "github.com/lfdebrux/bouncing/constants"
 
 type F func(v,thetadash float64) (t float64)
 

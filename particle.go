@@ -1,4 +1,4 @@
-package particle
+package bouncing
 
 import "math"
 import "math/rand"

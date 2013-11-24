@@ -1,12 +1,11 @@
-package particle
+package bouncing
 
 import "testing"
 
 import "math"
 
-const NUM = 100000
-
 func TestRandParticleInRange(t *testing.T) {
+	const NUM = 100000
 	for i := 0; i < NUM; i++ {
 		p := RandParticle(Water)
 		if p.Phi >= math.Pi || 0 > p.Phi {

@@ -1,8 +1,7 @@
-package jump
+package bouncing
 
 import "math"
 import "math/rand"
-import . "github.com/lfdebrux/bouncing/constants"
 
 func RandDirection() (psi,thetadash float64) {
 	psi = 2*math.Pi*rand.Float64()

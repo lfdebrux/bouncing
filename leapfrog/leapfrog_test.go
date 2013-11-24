@@ -5,9 +5,7 @@ import "testing"
 import "math"
 import "math/rand"
 
-import "github.com/lfdebrux/bouncing/particle"
-import "github.com/lfdebrux/bouncing/jump"
-import . "github.com/lfdebrux/bouncing/constants"
+import . "github.com/lfdebrux/bouncing"
 
 const NUM = 100
 const TOL = 1e-3
@@ -20,11 +18,11 @@ func almosteq(x,y float64) bool {
 }
 
 func simplecase(v0,thetadash float64) (p *P) {
-	return NewFromJump(&jump.J{Particle:&particle.Particle{Beta:0,Phi:math.Pi/2},V:v0,Psi:0,ThetaDash:thetadash})
+	return NewFromJump(&J{Particle:&Particle{Beta:0,Phi:math.Pi/2},V:v0,Psi:0,ThetaDash:thetadash})
 }
 
 func TestBetaPhi(t *testing.T) {
-	j := &jump.J{Particle:particle.RandParticle()}
+	j := &J{Particle:RandParticle()}
 	p := simplecase(300,math.Pi/4)
 
 	if !almosteq(p.Beta(),0.0) {
@@ -41,7 +39,7 @@ func TestAgainstKepler(t *testing.T) {
 		p := simplecase(v0,thetadash)
 
 		tleap := p.LeapFrogUntil()*DT
-		tkep := jump.FlightTime(v0,thetadash)
+		tkep := FlightTime(v0,thetadash)
 
 		if math.Abs(tleap-tkep) > TOL/DT {
 			t.Log(TOL/DT)
@@ -61,7 +59,7 @@ func TestAgainstPositionJump(t *testing.T) {
 
 		p.LeapFrogUntil()
 		phileap,betaleap := p.Phi(),p.Beta()
-		phipos,betapos := jump.Position(math.Pi/2,0,v0,0,thetadash)
+		phipos,betapos := Position(math.Pi/2,0,v0,0,thetadash)
 
 		if !almosteq(betapos,betaleap) || !almosteq(phipos,phileap) {
 			t.Fatalf("final position (phi,beta): leapfrog (%f,%f); jump (%f,%f)",phileap,betaleap,phipos,betapos)

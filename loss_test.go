@@ -1,9 +1,8 @@
-package jump
+package bouncing
 
 import "testing"
 
 import "math"
-import "github.com/lfdebrux/bouncing/particle"
 
 func percentPhoto(j *J) float64 {
 	j.Phi = math.Pi/2
@@ -22,7 +21,7 @@ func percentPhoto(j *J) float64 {
 }
 
 func TestIsPhotoZero(t *testing.T) {
-	j := &J{Particle:new(particle.Particle)}
+	j := &J{Particle:new(Particle)}
 
 	j.T = 0
 
@@ -32,7 +31,7 @@ func TestIsPhotoZero(t *testing.T) {
 }
 
 func TestIsPhotoTau(t *testing.T) {
-	j := &J{Particle:new(particle.Particle)}
+	j := &J{Particle:new(Particle)}
 
 	j.T = TAU
 
@@ -53,7 +52,7 @@ func percentCapture(j *J) float64 {
 }
 
 func TestIsCaptureEquator(t *testing.T) {
-	j := &J{Particle:new(particle.Particle)}
+	j := &J{Particle:new(Particle)}
 
 	j.Phi = math.Pi/2
 
@@ -80,7 +79,7 @@ func TestFstable(t *testing.T) {
 
 func TestIsCaptureExpectedValues(t *testing.T) {
 	for i,f := range FSTABLE {
-		j := &J{Particle:new(particle.Particle)}
+		j := &J{Particle:new(Particle)}
 		j.Phi = math.Pi/2 - (6+float64(i))*math.Pi/18
 		if pc := percentCapture(j); !almosteq(pc,f,1e-4) {
 			t.Log(diff(pc,f))

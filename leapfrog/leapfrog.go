@@ -3,8 +3,7 @@ package leapfrog
 import "code.google.com/p/gomat/vec"
 import "math"
 
-import . "github.com/lfdebrux/bouncing/constants"
-import "github.com/lfdebrux/bouncing/jump"
+import . "github.com/lfdebrux/bouncing"
 
 const DT = 1e-3
 
@@ -13,7 +12,7 @@ type P struct {
 	v vec.DenseVector
 }
 
-func NewFromJump(j *jump.J) *P {
+func NewFromJump(j *J) *P {
 	r,v := vec.New(3),vec.New(3)
 
 	cosbeta := math.Cos(j.Beta)
