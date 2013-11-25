@@ -35,7 +35,7 @@ func TestIsPhotoTau(t *testing.T) {
 
 	j.T = TAU
 
-	if pc := percentPhoto(j); !almosteq(pc, 1 - 1/math.E,1e-2) {
+	if pc := percentPhoto(j); !almosteq(pc, 1 - 1/math.E) {
 		t.Log(diff(pc,1-1/math.E))
 		t.Errorf("Expect 1 - 1/e=%f particles to be photodestructed for flight time tau=%f, instead %f%% were lost",1-1/math.E,TAU,pc)
 	}
@@ -81,7 +81,7 @@ func TestIsCaptureExpectedValues(t *testing.T) {
 	for i,f := range FSTABLE {
 		j := &J{P:new(P)}
 		j.Phi = math.Pi/2 - (6+float64(i))*math.Pi/18
-		if pc := percentCapture(j); !almosteq(pc,f,1e-4) {
+		if pc := percentCapture(j); !almosteq(pc,f) {
 			t.Log(diff(pc,f))
 			t.Errorf("Expect to capture %f%% at %d*Pi/18 latitude (%f), instead lost %f",f*100,6+i,j.Phi,pc*100)
 		}

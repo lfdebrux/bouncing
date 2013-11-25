@@ -8,14 +8,6 @@ import "math/rand"
 import . "github.com/lfdebrux/bouncing"
 
 const NUM = 100
-const TOL = 1e-3
-
-func almosteq(x,y float64) bool {
-	if math.Abs((x - y)/math.Max(x,y)) < TOL {
-		return true
-	}
-	return false
-}
 
 func simplecase(v0,thetadash float64) (p *P) {
 	return NewFromJump(&J{P:&P{Beta:0,Phi:math.Pi/2},V:v0,Psi:0,ThetaDash:thetadash})
