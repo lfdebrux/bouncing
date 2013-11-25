@@ -3,6 +3,13 @@ package bouncing
 import "testing"
 
 import "math"
+import "math/rand"
+
+func BenchmarkTemperature(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		Temperature(rand.Float64()*math.Pi)
+	}
+}
 
 func TestTemperaturePoleLimit(t *testing.T) {
 	if T := Temperature(0); math.Abs(T - T0) > TOL {
