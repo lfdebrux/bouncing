@@ -32,3 +32,15 @@ func PositionJump(phi0,beta0,v,psi,thetadash float64) (phi,beta float64) {
 	}
 	return phi,beta
 }
+
+func VondrakPositionJump(phi0,beta0,v,psi,thetadash float64) (phi,beta float64) {
+	d := 2*math.Atan(math.Sin(2*thetadash)/((VESC/v)*(VESC/v)-1-math.Cos(2*thetadash)))
+	phi = math.Acos(math.Cos(phi0)*math.Cos(d) + math.Sin(phi0)*math.Sin(d)*math.Cos(psi))
+	e := math.Acos((math.Cos(d)-math.Cos(phi0)*math.Cos(phi))/(math.Sin(phi0)*math.Sin(phi)))
+	if psi > math.Pi {
+		beta = beta0 + e
+	} else {
+		beta = beta0 - e
+	}
+	return phi,beta
+}

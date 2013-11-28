@@ -4,6 +4,18 @@ import "testing"
 
 import "math"
 
+func BenchmarkPositionJump(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		PositionJump(1.35,3.1,463,2.98,1.7)
+	}
+}
+
+func BenchmarkVondrakPositionJump(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		VondrakPositionJump(1.35,3.1,463,2.98,1.7)
+	}
+}
+
 func TestRandDirectionInRange(t *testing.T) {
 	for i := 0; i < NUM; i++ {
 		psi,thetadash := RandDirection() 
