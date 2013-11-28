@@ -35,6 +35,15 @@ func ButlerFlightTime(v,thetadash float64) (t float64) {
 	return t
 }
 
+func VondrakFlightTime(v,thetadash float64) (t float64) {
+	vr := v*math.Cos(thetadash)
+	g := MU/(R*R)
+	z := vr*vr/(g*R)
+
+	t = 2*vr*(1 + (math.Pi/2 + math.Asin(z - 1))/math.Sqrt(z*(2-z)))/(g*(2-z))
+
+	return t
+}
 func bruteforce(v,thetadash float64) (t float64) {
 	a := R/(2 - v*v*R/MU)
 	s := math.Sin(thetadash)*math.Sin(thetadash)*R*(2*a - R)/(a*a)
