@@ -21,7 +21,7 @@ func Jump(p *P) (*J,*Lost) {
 	return j,nil
 }
 
-func NewJump(rd RandDirectionFunc,pj PositionJumpFunc,ft FlightTimeFunc) func(*P) {
+func NewJump(rd RandDirectionFunc,pj PositionJumpFunc,ft FlightTimeFunc) func(*P) (*J,*Lost) {
 	return func(p *P) (*J,*Lost) {
 		j := &J{P:p}
 		j.V = RandVelocity(Mass[j.Type],j.Phi)
