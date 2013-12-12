@@ -18,7 +18,7 @@ func ButlerRandDirection() (psi,thetadash float64) {
 	return psi,thetadash	
 }
 
-func PositionJump(phi0,beta0,v,psi,thetadash float64) (phi,beta float64) {
+func ButlerPositionJump(phi0,beta0,v,psi,thetadash float64) (phi,beta float64) {
 	d := 2*math.Atan( 1 /( (VESC*VESC/(v*v))/(2*math.Sin(thetadash)*math.Cos(thetadash)) - math.Tan(thetadash) ) )
 	e := 0.0
 	if phi0 == 0 {

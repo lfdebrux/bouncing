@@ -6,7 +6,7 @@ import "math"
 
 func BenchmarkPositionJump(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		PositionJump(1.35,3.1,463,2.98,1.7)
+		ButlerPositionJump(1.35,3.1,463,2.98,1.7)
 	}
 }
 
