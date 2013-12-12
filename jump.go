@@ -20,3 +20,20 @@ func Jump(p *P) (*J,*Lost) {
 
 	return j,nil
 }
+
+func NewJump(rd RandDirectionFunc,pj PositionJumpFunc,ft FlightTimeFunc) func(*P) {
+	return func(p *P) (*J,*Lost) {
+		j := &J{P:p}
+		j.V = RandVelocity(Mass[j.Type],j.Phi)
+		j.Psi,j.ThetaDash = rd()
+		j.Phi,j.Beta = pj(j.Phi,j.Beta,j.V,j.Psi,j.ThetaDash)
+		j.T = ft(j.V,j.ThetaDash)
+
+		if lost := j.IsLost(); lost != nil {
+			p = RandParticle(p.Type)
+			return nil,lost
+		}
+
+		return j,nil
+	}
+}
