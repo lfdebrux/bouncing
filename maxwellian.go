@@ -101,12 +101,12 @@ func InitMaxwellian() {
 	Q = interp.New(Qy,Qx,interp.Akima)
 }
 
-func RandVelocity(m,lat0 float64) float64 {
+func RandVelocity(m,temp float64) float64 {
 	if Q == nil {
 		InitMaxwellian()
 	}
 	p := rand.Float64()
-	a := math.Sqrt(m/(K_B*Temperature(lat0)))
+	a := math.Sqrt(m/(K_B*temp))
 
 	return Q.Eval(p)/a
 }
