@@ -9,6 +9,6 @@ func BenchmarkJump(b *testing.B) {
 	p := RandParticle(Water)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		p.Jump()
+		Jump(p)
 	}
 }
