@@ -3,6 +3,9 @@ package bouncing
 import "math"
 import "math/rand"
 
+type RandDirectionFunc func() (psi,thetadash float64)
+type PositionJump func(phi0,beta0,v,psi,thetadash float64) (phi,beta float64) 
+
 func RandDirection() (psi,thetadash float64) {
 	psi = 2*math.Pi*rand.Float64()
 	thetadash = math.Acos(rand.Float64())
