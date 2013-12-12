@@ -12,12 +12,14 @@ type ParticleType int
 
 const (
 	Water = iota
+	Hydrogen
 )
 
 const AMU = 1.660538921e-27 // kg
 
 var Mass = []float64{
 	18*AMU, // Water
+	1*AMU, // Hydrogen
 }
 
 func RandParticle(typ ParticleType) *P {
