@@ -11,7 +11,7 @@ type JumpFunc func(*P) (*J,*Lost)
 
 func Jump(p *P) (*J,*Lost) {
 	j := &J{P:p}
-	j.Temperature = ButlerTemperature(j.Phi)
+	j.Temperature = ButlerTemperature(j.Phi,j.Beta)
 	j.V = RandVelocity(Mass[j.Type],j.Temperature)
 	j.Psi,j.ThetaDash = RandDirection()
 	j.Phi,j.Beta = ButlerPositionJump(j.Phi,j.Beta,j.V,j.Psi,j.ThetaDash)
@@ -28,7 +28,7 @@ func Jump(p *P) (*J,*Lost) {
 func NewJump(tm TemperatureFunc,rd RandDirectionFunc,pj PositionJumpFunc,ft FlightTimeFunc) JumpFunc {
 	return func(p *P) (*J,*Lost) {
 		j := &J{P:p}
-		j.Temperature = tm(j.Phi)
+		j.Temperature = tm(j.Phi,j.Beta)
 		j.V = RandVelocity(Mass[j.Type],j.Temperature)
 		j.Psi,j.ThetaDash = rd()
 		j.Phi,j.Beta = pj(j.Phi,j.Beta,j.V,j.Psi,j.ThetaDash)
