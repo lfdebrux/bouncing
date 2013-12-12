@@ -28,7 +28,7 @@ func TestButlerFlightTimeZero(t *testing.T) {
 	}
 }
 
-func VaryFlightTime(f F, cb func(v,a,t float64)) {
+func VaryFlightTime(f FlightTimeFunc, cb func(v,a,t float64)) {
 	const NUM = 1000
 	for i := 1; i < NUM; i++ {
 		for j := 0; j < NUM; j++ {

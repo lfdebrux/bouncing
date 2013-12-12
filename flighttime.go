@@ -2,7 +2,7 @@ package bouncing
 
 import "math"
 
-type F func(v,thetadash float64) (t float64)
+type FlightTimeFunc func(v,thetadash float64) (t float64)
 
 func FlightTime(v,thetadash float64) (t float64) {
 	if v == 0 {
