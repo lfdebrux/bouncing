@@ -6,6 +6,8 @@ type J struct {
 	T float64
 }
 
+type JumpFunc func(*P) (*J,*Lost)
+
 func Jump(p *P) (*J,*Lost) {
 	j := &J{P:p}
 	j.V = RandVelocity(Mass[j.Type],j.Phi)
@@ -21,7 +23,7 @@ func Jump(p *P) (*J,*Lost) {
 	return j,nil
 }
 
-func NewJump(rd RandDirectionFunc,pj PositionJumpFunc,ft FlightTimeFunc) func(*P) (*J,*Lost) {
+func NewJump(rd RandDirectionFunc,pj PositionJumpFunc,ft FlightTimeFunc) JumpFunc {
 	return func(p *P) (*J,*Lost) {
 		j := &J{P:p}
 		j.V = RandVelocity(Mass[j.Type],j.Phi)
