@@ -5,14 +5,14 @@ import "math"
 
 import . "github.com/lfdebrux/bouncing"
 
-const DT = 1e-3
+const DT = 5e-4
 
-type P struct {
+type Point struct {
 	r vec.DenseVector
 	v vec.DenseVector
 }
 
-func NewFromJump(j *J) *P {
+func NewFromJump(j *J) *Point {
 	r,v := vec.New(3),vec.New(3)
 
 	cosbeta := math.Cos(j.Beta)
@@ -32,18 +32,18 @@ func NewFromJump(j *J) *P {
 	v[1] = rdot*cosphi - Rphidot*sinphi
 	v[2] = rdot*cosbeta*sinphi - Rbetadot*sinbeta*sinphi + Rphidot*cosbeta*cosphi
 
-	return &P{r,v}
+	return &Point{r,v}
 }
 
-func (p *P) Beta() float64 {
+func (p *Point) Beta() float64 {
 	return math.Atan2(p.r[0],p.r[2])
 }
 
-func (p *P) Phi() float64 {
+func (p *Point) Phi() float64 {
 	return math.Acos(p.r[1]/math.Sqrt(p.r.Dot(p.r)))
 }
 
-func (p *P) LeapFrog() {
+func (p *Point) LeapFrog() {
 	for i := range p.r {
 		p.r[i] += p.v[i]*DT
 	}
@@ -56,7 +56,7 @@ func (p *P) LeapFrog() {
 	}
 }
 
-func (p *P) LeapFrogUntil() (n float64) {
+func (p *Point) LeapFrogUntil() (n float64) {
 	for p.r.Dot(p.r) >= R*R {
 		p.LeapFrog()
 		n++
