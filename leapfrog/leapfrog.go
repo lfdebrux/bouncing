@@ -63,3 +63,15 @@ func (p *Point) LeapFrogUntil() (n float64) {
 	}
 	return n
 }
+
+func (p *Point) MaxAltitude() (h float64) {
+	r2 := p.r.Dot(p.r)
+	for r2 >= R*R {
+		p.LeapFrog()
+		r2 = p.r.Dot(p.r)
+		if p.r.Dot(p.r) > h {
+			h = r2
+		}
+	}
+	return h
+}
