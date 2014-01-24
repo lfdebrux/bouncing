@@ -68,12 +68,17 @@ func TestAgainstPositionJump(t *testing.T) {
 
 		p.LeapFrogUntil()
 		phileap,betaleap := p.Phi(),p.Beta()
-		phipos,betapos := Position(math.Pi/2,0,v0,0,thetadash)
+		phipos,betapos := VondrakPositionJump(math.Pi/2,0,v0,0,thetadash)
+
+		t.Logf("final position %d (phi,beta): leapfrog (%f,%f); jump (%f,%f)",i,phileap,betaleap,phipos,betapos)
 
 		if !almosteq(betapos,betaleap) || !almosteq(phipos,phileap) {
-			t.Fatalf("final position (phi,beta): leapfrog (%f,%f); jump (%f,%f)",phileap,betaleap,phipos,betapos)
+			t.Logf("jump %d not within required accuracy",i)
+			FAIL++
+			t.Fail()
 		}
 	}
+	t.Logf("%d jumps not within required accuracy",FAIL)
 }
 
 func TestNewFromJump(t *testing.T) {
