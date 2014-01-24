@@ -5,7 +5,8 @@ import "math/rand"
 
 type P struct {
 	Type ParticleType
-	Phi,Beta float64
+	Phi,Beta float64 // colatitude, longitude radians
+	Time float64 // lunar time of day, seconds
 }
 
 type ParticleType int

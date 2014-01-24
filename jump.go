@@ -17,6 +17,8 @@ func Jump(p *P) (*J,*Lost) {
 	j.Phi,j.Beta = ButlerPositionJump(j.Phi,j.Beta,j.V,j.Psi,j.ThetaDash)
 	j.T = FlightTime(j.V,j.ThetaDash)
 
+	j.Time += j.T
+
 	if lost := j.IsLost(); lost != nil {
 		p = RandParticle(p.Type)
 		return nil,lost
