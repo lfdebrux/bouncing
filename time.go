@@ -1,10 +1,10 @@
-package "bouncing"
+package bouncing
 
 import "math"
 
 const LUNARDAY = 2.3606E6 // seconds
 
-func zenithFromTime(time, phi, beta float64) solarzenith float64 {
+func zenithFromTime(time, phi, beta float64) (solarzenith float64) {
 	// Calculate the solar zenith angle for a given time and position.
 
 	// currently a very naive formula, assuming that the lunar equator
