@@ -25,6 +25,17 @@ func almosteq(b,a float64) bool {
 	return false
 }
 
+func randomcase() (j *J, p *Point) {
+	v0 := rand.Float64()*700.0
+	psi, thetadash := RandDirection()
+	beta, phi := RandDirection()
+
+	j = &J{P:&P{Beta:beta,Phi:phi},V:v0,Psi:psi,ThetaDash:thetadash}
+	p = NewFromJump(j)
+
+	return j,p
+}
+
 func simplecase(v0,thetadash float64) (p *Point) {
 	return NewFromJump(&J{P:&P{Beta:0,Phi:math.Pi/2},V:v0,Psi:0,ThetaDash:thetadash})
 }
@@ -40,20 +51,32 @@ func TestBetaPhi(t *testing.T) {
 	}
 }
 
-func TestAgainstKepler(t *testing.T) {
+func flightTimeTest(t *testing.T, f FlightTimeFunc) {
+	t.Log(TOL/DT)
+	FAIL := 0
 	for i := 0; i < NUM; i++ {
-		v0,thetadash := rand.Float64()*700.0,rand.Float64()*math.Pi/2
-		p := simplecase(v0,thetadash)
+		j, p := randomcase()
 
 		tleap := p.LeapFrogUntil()*DT
-		tkep := FlightTime(v0,thetadash)
+		tf := f(j.V,j.ThetaDash)
 
-		if math.Abs(tleap-tkep) > TOL/DT {
-			t.Log(TOL/DT)
-			t.Log(tleap - tkep)
-			t.Fatalf("expected n~=%f, instead got %f",tleap,tkep)
+		t.Logf("flight time %d: leapfrog %f; func %f",i,tleap,tf)
+
+		if math.Abs(tleap-tf) > TOL/DT {
+			t.Logf("jump %d not within required accuracy: error %f",i,tleap-tf)
+			t.Fail()
+			FAIL++
 		}
 	}
+	t.Logf("%d jumps not within required accuracy",FAIL)
+}
+
+func TestAgainstKepler(t *testing.T) {
+	flightTimeTest(t, FlightTime)
+}
+
+func TestAgainstVondrak(t *testing.T) {
+	flightTimeTest(t, VondrakFlightTime)
 }
 
 func TestAgainstPositionJump(t *testing.T) {
