@@ -14,7 +14,7 @@ func ZenithFromTime(time, phi, beta float64) (solarzenith float64) {
 	// Calculate the solar zenith angle for a given time and position.
 
 	// currently a very naive formula, assuming that the lunar equator
-	// is aligned with the orbital plane, that the lunar rotation is constant,
+	// is aligned with the Sun-Moon plane, that the lunar rotation is constant,
 	// and that it is exactly midnight at colatitude Pi/2, longitude 0, time 0.
 
 	hr := SolarHourAngle(time, phi, beta)
