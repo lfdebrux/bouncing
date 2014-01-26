@@ -26,5 +26,5 @@ func TimeToSunrise(time, phi, beta float64) float64 {
 	if hr > 0.50 {
 		hr -= 1.0
 	}
-	return LUNARDAY*hr
+	return -LUNARDAY*hr
 }
