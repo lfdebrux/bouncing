@@ -3,14 +3,15 @@ package bouncing
 import "math"
 import "math/rand"
 
-func RandVelocity(m,temp float64) float64 {
+func RandVelocity(j *J) {
+	m,temp := Mass[j.Type],j.Temperature
 	if Q == nil {
 		InitMaxwellian()
 	}
 	p := rand.Float64()
 	a := math.Sqrt(m/(K_B*temp))
 
-	return Q.Eval(p)/a
+	j.V = Q.Eval(p)/a
 }
 
 type RandDirectionFunc func() (psi,thetadash float64)
