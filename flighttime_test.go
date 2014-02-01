@@ -4,30 +4,30 @@ import "testing"
 
 import "math"
 
-func makeJ(v,thetadash float64) *J {
+func makeFlightJ(v,thetadash float64) *J {
 	return &J{V:v,ThetaDash:thetadash}
 }
 
 func BenchmarkFlightTime(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		FlightTime(makeJ(300,1.74))
+		FlightTime(makeFlightJ(300,1.74))
 	}
 }
 
 func BenchmarkButlerFlightTime(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		ButlerFlightTime(makeJ(300,1.74))
+		ButlerFlightTime(makeFlightJ(300,1.74))
 	}
 }
 
 func BenchmarkVondrakFlightTime(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		VondrakFlightTime(makeJ(300,1.74))
+		VondrakFlightTime(makeFlightJ(300,1.74))
 	}
 }
 
 func TestButlerFlightTimeZero(t *testing.T) {
-	j := makeJ(0,0)
+	j := makeFlightJ(0,0)
 	ButlerFlightTime(j)
 	if j.T != 0 {
 		t.Errorf("Expected flight time with v=0 using Butler equation to be 0, instead got %f",j.T)
