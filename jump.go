@@ -28,14 +28,13 @@ func Jump(p *P) (*J,*Lost) {
 	return j,nil
 }
 
-func NewJump(tm JumpMethod,rd JumpMethod,pj JumpMethod,ft JumpMethod) JumpFunc {
+func NewJump(funcs ...JumpMethod) JumpFunc {
 	return func(p *P) (*J,*Lost) {
 		j := &J{P:p}
-		tm(j)
-		RandVelocity(j)
-		rd(j)
-		pj(j)
-		ft(j)
+		
+		for _,f := range funcs {
+			f(j)
+		}
 
 		j.Time += j.T
 
