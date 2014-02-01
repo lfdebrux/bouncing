@@ -36,6 +36,8 @@ func NewJump(tm TemperatureFunc,rd RandDirectionFunc,pj PositionJumpFunc,ft Flig
 		j.Phi,j.Beta = pj(j.Phi,j.Beta,j.V,j.Psi,j.ThetaDash)
 		j.T = ft(j.V,j.ThetaDash)
 
+		j.Time += j.T
+
 		if lost := j.IsLost(); lost != nil {
 			p = RandParticle(p.Type)
 			return nil,lost
