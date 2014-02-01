@@ -1,22 +1,8 @@
 package bouncing
 
 import "math"
-import "math/rand"
 
-type RandDirectionFunc func() (psi,thetadash float64)
 type PositionJumpFunc func(phi0,beta0,v,psi,thetadash float64) (phi,beta float64) 
-
-func RandDirection() (psi,thetadash float64) {
-	psi = 2*math.Pi*rand.Float64()
-	thetadash = math.Acos(rand.Float64())
-	return psi,thetadash
-}
-
-func ButlerRandDirection() (psi,thetadash float64) {
-	psi = 2*math.Pi*rand.Float64()
-	thetadash = rand.Float64()*math.Pi/2
-	return psi,thetadash	
-}
 
 func ButlerPositionJump(phi0,beta0,v,psi,thetadash float64) (phi,beta float64) {
 	d := 2*math.Atan( 1 /( (VESC*VESC/(v*v))/(2*math.Sin(thetadash)*math.Cos(thetadash)) - math.Tan(thetadash) ) )

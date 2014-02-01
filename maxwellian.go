@@ -1,12 +1,8 @@
 package bouncing
 
-import "math"
-import "math/rand"
 import "bitbucket.org/lfdebrux/gsl/interp"
 
 const K_B = 1.3806e-23
-
-type quant func(p float64) (v float64)
 
 var Q *interp.Interp
 
@@ -99,16 +95,6 @@ var Qy []float64 = []float64{
 
 func InitMaxwellian() {
 	Q = interp.New(Qy,Qx,interp.Akima)
-}
-
-func RandVelocity(m,temp float64) float64 {
-	if Q == nil {
-		InitMaxwellian()
-	}
-	p := rand.Float64()
-	a := math.Sqrt(m/(K_B*temp))
-
-	return Q.Eval(p)/a
 }
 
 func FreeMaxwellian() {

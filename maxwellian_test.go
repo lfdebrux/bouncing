@@ -30,29 +30,6 @@ func averageAccumulator() (func(x float64) (float64,float64)) {
 	}
 }
 
-func TestUnInitedMaxwellian(t *testing.T) {
-	if Q != nil {
-		FreeMaxwellian()
-	}
-	defer FreeMaxwellian()
-
-	RandVelocity(1,0)
-}
-
-func BenchmarkRandVelocity(b *testing.B) {
-	InitMaxwellian()
-	defer FreeMaxwellian()
-
-	m := Mass[Water]
-	lat := 0.0
-
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		RandVelocity(m,lat)
-	}
-}
-
 func TestMaxwellianMode(t *testing.T) {
 	InitMaxwellian()
 	defer FreeMaxwellian()
