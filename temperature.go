@@ -5,8 +5,8 @@ import "math"
 type TemperatureFunc func(phi,beta float64) float64
 
 const (
-	ButlerT0 = 151.0
-	ButlerT1 = 161.7
+	ButlerT0 = 151.0 // Kelvin
+	ButlerT1 = 161.7 // Kelvin
 )
 
 func ButlerTemperature(phi,beta float64) float64 {
