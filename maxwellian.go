@@ -99,4 +99,5 @@ func InitMaxwellian() {
 
 func FreeMaxwellian() {
 	Q.Free()
+	Q = nil
 }
