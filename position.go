@@ -2,11 +2,13 @@ package bouncing
 
 import "math"
 
-type PositionJumpFunc func(phi0,beta0,v,psi,thetadash float64) (phi,beta float64) 
+func ButlerPositionJump(j *J) {
+	phi0,beta0 := j.Phi,j.Beta
+	v,psi,thetadash := j.V,j.Psi,j.ThetaDash
 
-func ButlerPositionJump(phi0,beta0,v,psi,thetadash float64) (phi,beta float64) {
 	d := 2*math.Atan( 1 /( (VESC*VESC/(v*v))/(2*math.Sin(thetadash)*math.Cos(thetadash)) - math.Tan(thetadash) ) )
-	e := 0.0
+
+	var e,phi,beta float64
 	if phi0 == 0 {
 		phi = d
 		e = psi
@@ -19,17 +21,27 @@ func ButlerPositionJump(phi0,beta0,v,psi,thetadash float64) (phi,beta float64) {
 	} else {
 		beta = beta0 - e
 	}
-	return phi,beta
+	
+	j.Phi = phi
+	j.Beta = beta
 }
 
-func VondrakPositionJump(phi0,beta0,v,psi,thetadash float64) (phi,beta float64) {
+func VondrakPositionJump(j *J) {
+	phi0,beta0 := j.Phi,j.Beta
+	v,psi,thetadash := j.V,j.Psi,j.ThetaDash
+
 	d := 2*math.Atan(math.Sin(2*thetadash)/((VESC/v)*(VESC/v)-1-math.Cos(2*thetadash)))
-	phi = math.Acos(math.Cos(phi0)*math.Cos(d) + math.Sin(phi0)*math.Sin(d)*math.Cos(psi))
+	phi := math.Acos(math.Cos(phi0)*math.Cos(d) + math.Sin(phi0)*math.Sin(d)*math.Cos(psi))
 	e := math.Acos((math.Cos(d)-math.Cos(phi0)*math.Cos(phi))/(math.Sin(phi0)*math.Sin(phi)))
+
+	var beta float64
+
 	if psi > math.Pi {
 		beta = beta0 + e
 	} else {
 		beta = beta0 - e
 	}
-	return phi,beta
+	
+	j.Phi = phi
+	j.Beta = beta
 }
