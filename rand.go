@@ -14,16 +14,12 @@ func RandVelocity(j *J) {
 	j.V = Q.Eval(p)/a
 }
 
-type RandDirectionFunc func() (psi,thetadash float64)
-
-func RandDirection() (psi,thetadash float64) {
-	psi = 2*math.Pi*rand.Float64()
-	thetadash = math.Acos(rand.Float64())
-	return psi,thetadash
+func RandDirection(j *J) {
+	j.Psi = 2*math.Pi*rand.Float64()
+	j.ThetaDash = math.Acos(rand.Float64())
 }
 
-func ButlerRandDirection() (psi,thetadash float64) {
-	psi = 2*math.Pi*rand.Float64()
-	thetadash = rand.Float64()*math.Pi/2
-	return psi,thetadash	
+func ButlerRandDirection(j *J) {
+	j.Psi = 2*math.Pi*rand.Float64()
+	j.ThetaDash = rand.Float64()*math.Pi/2
 }

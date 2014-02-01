@@ -30,12 +30,13 @@ func BenchmarkRandVelocity(b *testing.B) {
 
 func TestRandDirectionInRange(t *testing.T) {
 	for i := 0; i < NUM; i++ {
-		psi,thetadash := RandDirection() 
-		if psi >= 2*math.Pi || 0 > psi {
-			t.Errorf("psi should be in range 0..2pi, instead got %f",psi)
+		j := makeVelJ()
+		RandDirection(j) 
+		if j.Psi >= 2*math.Pi || 0 > j.Psi {
+			t.Errorf("psi should be in range 0..2pi, instead got %f",j.Psi)
 		}
-		if thetadash >= math.Pi/2 || 0 > thetadash {
-			t.Errorf("thetadash should be in range 0..pi/2, instead got %f",thetadash)
+		if j.ThetaDash >= math.Pi/2 || 0 > j.ThetaDash {
+			t.Errorf("thetadash should be in range 0..pi/2, instead got %f",j.ThetaDash)
 		}
 	}
 }
