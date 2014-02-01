@@ -4,38 +4,45 @@ import "testing"
 
 import "math"
 
+func makeJ(v,thetadash float64) *J {
+	return &J{V:v,ThetaDash:thetadash}
+}
+
 func BenchmarkFlightTime(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		FlightTime(300,1.74)
+		FlightTime(makeJ(300,1.74))
 	}
 }
 
 func BenchmarkButlerFlightTime(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		ButlerFlightTime(300,1.74)
+		ButlerFlightTime(makeJ(300,1.74))
 	}
 }
 
 func BenchmarkVondrakFlightTime(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		VondrakFlightTime(300,1.74)
+		VondrakFlightTime(makeJ(300,1.74))
 	}
 }
 
 func TestButlerFlightTimeZero(t *testing.T) {
-	if time := ButlerFlightTime(0,0); time != 0 {
-		t.Errorf("Expected flight time with v=0 using Butler equation to be 0, instead got %f",time)
+	j := makeJ(0,0)
+	ButlerFlightTime(j)
+	if j.T != 0 {
+		t.Errorf("Expected flight time with v=0 using Butler equation to be 0, instead got %f",j.T)
 	}
 }
 
-func VaryFlightTime(f FlightTimeFunc, cb func(v,a,t float64)) {
+func VaryFlightTime(f JumpMethod, cb func(v,a,t float64)) {
+	jump := new(J)
 	const NUM = 1000
 	for i := 1; i < NUM; i++ {
 		for j := 0; j < NUM; j++ {
-			v := (2300)*float64(i)/(NUM-1)
-			a := math.Pi/2*float64(j)/NUM
-			t := f(v,a)
-			cb(v,a,t)
+			jump.V = (2300)*float64(i)/(NUM-1)
+			jump.ThetaDash = math.Pi/2*float64(j)/NUM
+			f(jump)
+			cb(jump.V,jump.ThetaDash,jump.T)
 		}
 	}
 }
