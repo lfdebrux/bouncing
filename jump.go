@@ -2,9 +2,9 @@ package bouncing
 
 type J struct {
 	*P
-	V,Psi,ThetaDash float64
+	Velocity,Psi,ThetaDash float64
 	Temperature float64
-	T float64
+	FlightTime float64
 }
 
 type JumpMethod func(*J)
@@ -18,14 +18,9 @@ func Jump(p *P) (*J,*Lost) {
 	ButlerPositionJump(j)
 	FlightTime(j)
 
-	j.Time += j.T
+	j.Time += j.FlightTime
 
-	if lost := j.IsLost(); lost != nil {
-		p = RandParticle(p.Type)
-		return nil,lost
-	}
-
-	return j,nil
+	return j,j.IsLost()
 }
 
 func NewJump(funcs ...JumpMethod) JumpFunc {
@@ -36,13 +31,8 @@ func NewJump(funcs ...JumpMethod) JumpFunc {
 			f(j)
 		}
 
-		j.Time += j.T
+		j.Time += j.FlightTime
 
-		if lost := j.IsLost(); lost != nil {
-			p = RandParticle(p.Type)
-			return nil,lost
-		}
-
-		return j,nil
+		return j,j.IsLost()
 	}
 }

@@ -4,7 +4,7 @@ import "math"
 
 func ButlerPositionJump(j *J) {
 	phi0,beta0 := j.Phi,j.Beta
-	v,psi,thetadash := j.V,j.Psi,j.ThetaDash
+	v,psi,thetadash := j.Velocity,j.Psi,j.ThetaDash
 
 	d := 2*math.Atan( 1 /( (VESC*VESC/(v*v))/(2*math.Sin(thetadash)*math.Cos(thetadash)) - math.Tan(thetadash) ) )
 
@@ -23,12 +23,12 @@ func ButlerPositionJump(j *J) {
 	}
 	
 	j.Phi = phi
-	j.Beta = beta
+	j.Beta = math.Mod(beta,2*math.Pi)
 }
 
 func VondrakPositionJump(j *J) {
 	phi0,beta0 := j.Phi,j.Beta
-	v,psi,thetadash := j.V,j.Psi,j.ThetaDash
+	v,psi,thetadash := j.Velocity,j.Psi,j.ThetaDash
 
 	d := 2*math.Atan(math.Sin(2*thetadash)/((VESC/v)*(VESC/v)-1-math.Cos(2*thetadash)))
 	phi := math.Acos(math.Cos(phi0)*math.Cos(d) + math.Sin(phi0)*math.Sin(d)*math.Cos(psi))
@@ -43,5 +43,5 @@ func VondrakPositionJump(j *J) {
 	}
 	
 	j.Phi = phi
-	j.Beta = beta
+	j.Beta = math.Mod(beta,2*math.Pi)
 }

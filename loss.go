@@ -23,20 +23,20 @@ type Lost struct {
 func (l *Lost) Error() string {
 	switch l.HowLost {
 		case ThermalEscape:
-			return fmt.Sprintf("particle lost due to thermal escape, v=%f",l.Jump.V)
+			return fmt.Sprintf("loss: particle lost due to thermal escape, v=%f",l.Jump.Velocity)
 		case Photodestruction:
-			return fmt.Sprintf("particle lost due to photodestruction, t=%f",l.Jump.T)
+			return fmt.Sprintf("loss: particle lost due to photodestruction, t=%f",l.Jump.FlightTime)
 		case Capture:
-			return fmt.Sprintf("particle lost due to capture by stable region, phi=%f",l.Jump.Phi)
+			return fmt.Sprintf("loss: particle lost due to capture by stable region, phi=%f",l.Jump.Phi)
 	}
 	return "particle lost"
 }
 
 func (j *J) IsLost() *Lost {
-	if j.V > VESC {
+	if j.Velocity > VESC {
 		return &Lost{ThermalEscape,j}
 	}
-	if rand.Float64() > math.Exp(-j.T/TAU) {
+	if rand.Float64() > math.Exp(-j.FlightTime/TAU) {
 		return &Lost{Photodestruction,j}
 	}
 	if l := j.IsCapture(); l != nil {

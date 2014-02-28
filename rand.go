@@ -11,7 +11,7 @@ func RandVelocity(j *J) {
 	p := rand.Float64()
 	a := math.Sqrt(m/(K_B*temp))
 
-	j.V = Q.Eval(p)/a
+	j.Velocity = Q.Eval(p)/a
 }
 
 func RandDirection(j *J) {

@@ -3,9 +3,9 @@ package bouncing
 import "math"
 
 func FlightTime(j *J) {
-	v,thetadash := j.V,j.ThetaDash
+	v,thetadash := j.Velocity,j.ThetaDash
 	if v == 0 {
-		j.T = 0
+		j.FlightTime = 0
 		return
 	}
 	b := v*v*R/MU
@@ -16,13 +16,13 @@ func FlightTime(j *J) {
 
 	t := T*( 1 - ( math.Acos((1-g)/e) - math.Sqrt( g*(2 - b*o - g) ) )/math.Pi )
 
-	j.T = t
+	j.FlightTime = t
 }
 
 func ButlerFlightTime(j *J) {
-	v,thetadash := j.V,j.ThetaDash
+	v,thetadash := j.Velocity,j.ThetaDash
 	if v == 0 {
-		j.T = 0
+		j.FlightTime = 0
 		return
 	}
 	v0 := v*math.Cos(thetadash)
@@ -40,13 +40,13 @@ func ButlerFlightTime(j *J) {
 
 	t := hmax - h0
 
-	j.T = t
+	j.FlightTime = t
 }
 
 func VondrakFlightTime(j *J) {
-	v,thetadash := j.V,j.ThetaDash
+	v,thetadash := j.Velocity,j.ThetaDash
 	if v == 0 {
-		j.T = 0
+		j.FlightTime = 0
 		return
 	}
 	vr := v*math.Cos(thetadash)
@@ -55,11 +55,11 @@ func VondrakFlightTime(j *J) {
 
 	t := 2*vr*(1 + (math.Pi/2 + math.Asin(z - 1))/math.Sqrt(z*(2-z)))/(g*(2-z))
 
-	j.T = t
+	j.FlightTime = t
 }
 
 func bruteforce(j *J) {
-	v,thetadash := j.V,j.ThetaDash
+	v,thetadash := j.Velocity,j.ThetaDash
 	a := R/(2 - v*v*R/MU)
 	s := math.Sin(thetadash)*math.Sin(thetadash)*R*(2*a - R)/(a*a)
 	e := math.Sqrt( 1 - s )
@@ -71,5 +71,5 @@ func bruteforce(j *J) {
 	M = 2*math.Pi - 2*M
 	t := M*T/(2*math.Pi)
 
-	j.T = t
+	j.FlightTime = t
 }
