@@ -7,6 +7,7 @@ type B struct {
 	Binned []float64
 	Start,Stop,Step float64
 	Num int
+	Count int
 }
 
 func scale(val float64, in_min, in_max, out_min, out_max float64) float64 {
@@ -27,12 +28,13 @@ func NewBins(start,stop,step float64) *B {
 	num := int((stop-start)/step) + 1
 	bm := Range(start,stop,step)
 	bn := make([]float64,num)
-	return &B{bm,bn,start,stop,step,num}
+	return &B{bm,bn,start,stop,step,num,0}
 }
 
 func (b *B) index(x float64) int {
 	if x < b.Start || x > b.Stop {
 		panic(fmt.Sprintf("plot: binned: value %f does not fit in range %f..%f",x,b.Start,b.Stop))
+		// TODO: discard if out of range?
 	}
 	return int(x/b.Step)
 }
@@ -41,6 +43,7 @@ func (b *B) Bin(xx ...float64) {
 	for _,x := range xx {
 		i := b.index(x)
 		b.Binned[i]++
+		b.Count++
 	}
 	// TODO: return error?
 }
