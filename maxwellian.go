@@ -2,8 +2,6 @@ package bouncing
 
 import "bitbucket.org/lfdebrux/gsl/interp"
 
-const K_B = 1.3806e-23
-
 var Q *interp.Interp
 
 var Qx []float64 = []float64{
