@@ -9,6 +9,33 @@ import (
 	"github.com/lfdebrux/bouncing/hist"
 )
 
+func maxwellian(a,x float64) float64 {
+	return math.Sqrt(2/math.Pi)*(a*a*a)*(x*x)*math.Exp(-((a*x)*(a*x))/2)
+}
+
+func maxwellianCDF(a,x float64) float64 {
+	return math.Erf(a*x/math.Sqrt2) - math.Sqrt(2/math.Pi)*a*x*math.Exp(-((a*x)*(a*x))/2)
+}
+
+func TestMaxwellianInverse(t *testing.T) {
+	InitMaxwellian()
+	defer FreeMaxwellian()
+
+	rand.Seed(time.Now().UnixNano())
+
+	for i := 0; i < NUM; i++ {
+		a := rand.Float64()
+		v := 10*rand.Float64()
+
+		p := maxwellianCDF(a,v)
+		av_test := Q.Eval(p)
+
+		if !almosteq(av_test, a*v) {
+			t.Fatalf("Q(maxwellianCDF(%v,%v)) should be %v, instead got %v, p = %v",a,v,a*v,av_test,p)
+		}
+	}
+}
+
 func averageAccumulator() (func(x float64) (float64,float64)) {
 	var k,Qk,mean,stddev float64
 
@@ -51,10 +78,8 @@ func TestMaxwellianMode(t *testing.T) {
 		}
 	}
 
-	t.Log(mode,max)
-
 	if !almosteq(mode,1.4/*math.Sqrt2*/) {
-		t.Errorf("Mode of Maxwell-Boltzmann distribution should be sqrt(2)=%f, instead got %f",math.Sqrt2,mode)
+		t.Errorf("Mode of Maxwell-Boltzmann distribution should be sqrt(2)=%f, instead got %f (%v counts)",math.Sqrt2,mode,max)
 	}
 }
 
