@@ -5,7 +5,7 @@ import "testing"
 import "math"
 
 func makeFlightJ(v,thetadash float64) *J {
-	return &J{V:v,ThetaDash:thetadash}
+	return &J{Velocity:v,ThetaDash:thetadash}
 }
 
 func BenchmarkFlightTime(b *testing.B) {
@@ -29,8 +29,8 @@ func BenchmarkVondrakFlightTime(b *testing.B) {
 func TestButlerFlightTimeZero(t *testing.T) {
 	j := makeFlightJ(0,0)
 	ButlerFlightTime(j)
-	if j.T != 0 {
-		t.Errorf("Expected flight time with v=0 using Butler equation to be 0, instead got %f",j.T)
+	if j.FlightTime != 0 {
+		t.Errorf("Expected flight time with v=0 using Butler equation to be 0, instead got %f",j.FlightTime)
 	}
 }
 
@@ -39,10 +39,10 @@ func VaryFlightTime(f JumpMethod, cb func(v,a,t float64)) {
 	const NUM = 1000
 	for i := 1; i < NUM; i++ {
 		for j := 0; j < NUM; j++ {
-			jump.V = (2300)*float64(i)/(NUM-1)
+			jump.Velocity = (2300)*float64(i)/(NUM-1)
 			jump.ThetaDash = math.Pi/2*float64(j)/NUM
 			f(jump)
-			cb(jump.V,jump.ThetaDash,jump.T)
+			cb(jump.Velocity,jump.ThetaDash,jump.FlightTime)
 		}
 	}
 }

@@ -3,7 +3,7 @@ package bouncing
 import "testing"
 
 func makePosJ(phi0,beta0,v,psi,thetadash float64) *J {
-	return &J{P:&P{Phi:phi0,Beta:beta0},V:v,Psi:psi,ThetaDash:thetadash}
+	return &J{P:&P{Phi:phi0,Beta:beta0},Velocity:v,Psi:psi,ThetaDash:thetadash}
 }
 
 func BenchmarkPositionJump(b *testing.B) {

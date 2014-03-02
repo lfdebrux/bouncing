@@ -6,7 +6,7 @@ import "math"
 
 func percentPhoto(j *J) float64 {
 	j.Phi = math.Pi/2
-	j.V = 0
+	j.Velocity = 0
 	var count float64
 	for i := 0; i < NUM; i++ {
 		if l := j.IsLost(); l != nil {
@@ -23,7 +23,7 @@ func percentPhoto(j *J) float64 {
 func TestIsPhotoZero(t *testing.T) {
 	j := &J{P:new(P)}
 
-	j.T = 0
+	j.FlightTime = 0
 
 	if pc := percentPhoto(j); pc != 0 {
 		t.Errorf("No particles should be photodestructed when flight time is 0, however %f%% were lost",pc)
@@ -33,7 +33,7 @@ func TestIsPhotoZero(t *testing.T) {
 func TestIsPhotoTau(t *testing.T) {
 	j := &J{P:new(P)}
 
-	j.T = TAU
+	j.FlightTime = TAU
 
 	if pc := percentPhoto(j); !almosteq(pc, 1 - 1/math.E) {
 		t.Log(diff(pc,1-1/math.E))
