@@ -58,3 +58,19 @@ func (j *J) IsCapture() *Lost {
 	}
 	return nil
 }
+
+func VondrakColdTraps(j *J) {
+	lat := j.Phi - math.Pi/2
+	var fstable float64
+	if lat > 85*math.Pi/180 {
+		fstable = 0.0367
+	} else if lat < -85*math.Pi/180 {
+		fstable = 0.0706
+	} else {
+		return nil
+	}
+	if rand.Float64() < fstable {
+		return &Lost{Capture,j}
+	}
+	return nil
+}

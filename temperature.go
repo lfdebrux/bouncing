@@ -12,6 +12,6 @@ func ButlerTemperature(j *J) {
 }
 
 // WIP
-func VondrakTemperature(phi,solarzenith float64) float64 {
-	return 280 * math.Pow(math.Cos(solarzenith),0.25) + 100
+func VondrakTemperature(j *J) {
+	j.Temperature = 280 * math.Pow(math.Cos(j.SolarZenith),0.25) + 100
 }
