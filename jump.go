@@ -20,7 +20,12 @@ func Jump(p *P) (*J,*Lost) {
 
 	j.Time += j.FlightTime
 
-	return j,IsLost(j)
+	loss := IsLost(j)
+	if loss == nil {
+		loss = IsCaptureButler(j)
+	}
+
+	return j,loss
 }
 
 func NewJump(funcs ...JumpMethod) JumpFunc {
@@ -28,7 +33,10 @@ func NewJump(funcs ...JumpMethod) JumpFunc {
 		j := &J{P:p}
 		
 		for _,f := range funcs {
-			f(j)
+			loss := f(j)
+			if loss != nil {
+				return j,loss
+			}
 		}
 
 		j.Time += j.FlightTime
