@@ -10,34 +10,52 @@ var FSTABLE = []float64{0.4e-2,0.9e-2,4e-2,11e-2}
 type LostType int
 
 const (
-	ThermalEscape LostType = iota
+	Error LostType = iota
+	ThermalEscape
 	Photodestruction
 	Capture
 )
 
 type Lost struct {
+	err string
 	HowLost LostType
 	Jump *J
 }
 
 func (l *Lost) Error() string {
-	switch l.HowLost {
-		case ThermalEscape:
-			return fmt.Sprintf("loss: particle lost due to thermal escape, v=%f",l.Jump.Velocity)
-		case Photodestruction:
-			return fmt.Sprintf("loss: particle lost due to photodestruction, t=%f",l.Jump.FlightTime)
-		case Capture:
-			return fmt.Sprintf("loss: particle lost due to capture by stable region, phi=%f",l.Jump.Phi)
+	return l.err
+}
+
+func (j *J) NaNCheck() *Lost {
+	switch {
+	case math.IsNaN(j.Phi):
+		return &Lost{"loss: j.Phi is NaN",Error,j}
+	case math.IsNaN(j.Beta):
+		return &Lost{"loss: j.Beta is NaN",Error,j}
+	case math.IsNaN(j.Time):
+		return &Lost{"loss: j.Time is NaN",Error,j}
+	case math.IsNaN(j.SolarZenith):
+		return &Lost{"loss: j.SolarZenith is NaN",Error,j}
+	case math.IsNaN(j.Velocity):
+		return &Lost{"loss: j.Velocity is NaN",Error,j}
+	case math.IsNaN(j.Psi):
+		return &Lost{"loss: j.Psi is NaN",Error,j}
+	case math.IsNaN(j.ThetaDash):
+		return &Lost{"loss: j.ThetaDash is NaN",Error,j}
+	case math.IsNaN(j.Temperature):
+		return &Lost{"loss: j.Temperature is NaN",Error,j}
+	case math.IsNaN(j.FlightTime):
+		return &Lost{"loss: j.FlightTime is NaN",Error,j}
 	}
-	return "particle lost"
+	return nil
 }
 
 func (j *J) IsLost() *Lost {
 	if j.Velocity > VESC {
-		return &Lost{ThermalEscape,j}
+		return &Lost{fmt.Sprintf("loss: particle lost due to thermal escape, v=%f",j.Velocity),ThermalEscape,j}
 	}
 	if rand.Float64() > math.Exp(-j.FlightTime/TAU) {
-		return &Lost{Photodestruction,j}
+		return &Lost{fmt.Sprintf("loss: particle lost due to photodestruction, t=%f",j.FlightTime),Photodestruction,j}
 	}
 	if l := j.IsCapture(); l != nil {
 		return l
@@ -53,13 +71,13 @@ func (j *J) IsCapture() *Lost {
 	lat := math.Abs(math.Pi/2 - j.Phi)
 	if lat > 5*math.Pi/18 {
 		if rand.Float64() < fstable(lat) {
-			return &Lost{Capture,j}
+			return &Lost{fmt.Sprintf("loss: particle lost due to capture by stable region, phi=%f",j.Phi),Capture,j}
 		}
 	}
 	return nil
 }
 
-func VondrakColdTraps(j *J) {
+func VondrakColdTraps(j *J) *Lost {
 	lat := j.Phi - math.Pi/2
 	var fstable float64
 	if lat > 85*math.Pi/180 {
@@ -70,7 +88,7 @@ func VondrakColdTraps(j *J) {
 		return nil
 	}
 	if rand.Float64() < fstable {
-		return &Lost{Capture,j}
+		return &Lost{fmt.Sprintf("loss: particle lost due to capture by stable region, phi=%f",j.Phi),Capture,j}
 	}
 	return nil
 }
