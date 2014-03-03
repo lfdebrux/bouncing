@@ -7,11 +7,12 @@ const (
 	ButlerT1 = 161.7 // Kelvin
 )
 
-func ButlerTemperature(j *J) {
+func ButlerTemperature(j *J) *Lost {
 	j.Temperature = ButlerT0 + ButlerT1*math.Pow(math.Cos(j.Phi-math.Pi/2),0.59)
+	return nil
 }
 
-// WIP
-func VondrakTemperature(j *J) {
+func VondrakTemperature(j *J) *Lost {
 	j.Temperature = 280 * math.Pow(math.Cos(j.SolarZenith),0.25) + 100
+	return nil
 }

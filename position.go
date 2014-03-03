@@ -2,7 +2,7 @@ package bouncing
 
 import "math"
 
-func ButlerPositionJump(j *J) {
+func ButlerPositionJump(j *J) *Lost {
 	phi0,beta0 := j.Phi,j.Beta
 	v,psi,thetadash := j.Velocity,j.Psi,j.ThetaDash
 
@@ -24,9 +24,11 @@ func ButlerPositionJump(j *J) {
 	
 	j.Phi = phi
 	j.Beta = math.Mod(beta,2*math.Pi)
+
+	return nil
 }
 
-func VondrakPositionJump(j *J) {
+func VondrakPositionJump(j *J) *Lost {
 	phi0,beta0 := j.Phi,j.Beta
 	v,psi,thetadash := j.Velocity,j.Psi,j.ThetaDash
 
@@ -44,4 +46,6 @@ func VondrakPositionJump(j *J) {
 	
 	j.Phi = phi
 	j.Beta = math.Mod(beta,2*math.Pi)
+
+	return nil
 }

@@ -9,7 +9,7 @@ func percentPhoto(j *J) float64 {
 	j.Velocity = 0
 	var count float64
 	for i := 0; i < NUM; i++ {
-		if l := j.IsLost(); l != nil {
+		if l := IsLost(j); l != nil {
 			if l.HowLost == Photodestruction {
 				count++
 			} else {
@@ -44,7 +44,7 @@ func TestIsPhotoTau(t *testing.T) {
 func percentCapture(j *J) float64 {
 	var count float64
 	for i := 0; i < NUM; i++ {
-		if l := j.IsCapture(); l != nil {
+		if l := IsCaptureButler(j); l != nil {
 			count++
 		}
 	}
@@ -61,18 +61,22 @@ func TestIsCaptureEquator(t *testing.T) {
 	}
 }
 
-func TestFstableLessThan60(t *testing.T) {
-	if g := fstable(5.1*math.Pi/18); g != FSTABLE[0] {
-		t.Errorf("fstable at 5*Pi/18 < latitude < 6*Pi/18 should be %f, instead got %f",FSTABLE[0],g)
+func testButlerFstable(lat float64) float64 {
+	return FSTABLE[int(math.Ceil(lat*18/math.Pi))-6]
+}
+
+func TestButlerFstableLessThan60(t *testing.T) {
+	if g := testButlerFstable(5.1*math.Pi/18); g != FSTABLE[0] {
+		t.Errorf("ButlerFstable at 5*Pi/18 < latitude < 6*Pi/18 should be %f, instead got %f",FSTABLE[0],g)
 	}
 }
 
-func TestFstable(t *testing.T) {
+func TestButlerFstable(t *testing.T) {
 	for i,f := range FSTABLE {
 		l := (5.5+float64(i))*math.Pi/18
-		if g := fstable(l); g != f {
+		if g := testButlerFstable(l); g != f {
 			t.Log(l*18/math.Pi)
-			t.Errorf("fstable at %d*Pi/18 latitude should be %f, instead got %f",6+i,f,g)
+			t.Errorf("ButlerFstable at %d*Pi/18 latitude should be %f, instead got %f",6+i,f,g)
 		}
 	}
 }

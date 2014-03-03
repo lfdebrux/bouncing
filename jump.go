@@ -7,7 +7,7 @@ type J struct {
 	FlightTime float64
 }
 
-type JumpMethod func(*J)
+type JumpMethod func(*J) *Lost
 type JumpFunc func(*P) (*J,*Lost)
 
 func Jump(p *P) (*J,*Lost) {
@@ -20,7 +20,7 @@ func Jump(p *P) (*J,*Lost) {
 
 	j.Time += j.FlightTime
 
-	return j,j.IsLost()
+	return j,IsLost(j)
 }
 
 func NewJump(funcs ...JumpMethod) JumpFunc {
@@ -33,6 +33,6 @@ func NewJump(funcs ...JumpMethod) JumpFunc {
 
 		j.Time += j.FlightTime
 
-		return j,j.IsLost()
+		return j,IsLost(j)
 	}
 }
