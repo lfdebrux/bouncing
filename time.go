@@ -41,6 +41,7 @@ func VondrakSunrise(j *J) *Lost {
 	if j.SolarZenith > math.Pi/2 {
 		j.Beta = 3*math.Pi/2
 		j.Time += (j.Beta - math.Pi/2)*375704
+		j.SolarZenith = math.Pi/2
 	}
 	return nil
 }
