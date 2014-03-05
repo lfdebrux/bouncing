@@ -1,7 +1,10 @@
 package bouncing
 
-import "math"
-import "math/rand"
+import (
+	"fmt"
+	"math"
+	"math/rand"
+)
 
 func RandVelocity(j *J) *Lost {
 	m,temp := Mass[j.Type],j.Temperature
@@ -12,6 +15,11 @@ func RandVelocity(j *J) *Lost {
 	a := math.Sqrt(m/(K_B*temp))
 
 	j.Velocity = Q.Eval(p)/a
+
+	if j.Velocity > VESC {
+		return &Lost{fmt.Sprintf("loss: thermal escape, v=%f",j.Velocity),ThermalEscape}
+	}
+
 	return nil
 }
 

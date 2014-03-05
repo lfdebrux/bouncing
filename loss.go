@@ -62,11 +62,11 @@ func IsNaN(j *J) *Lost {
 }
 
 func IsLost(j *J) *Lost {
-	if l := IsNaN(j); l != nil {
-		return l
-	}
 	if j.Velocity > VESC {
 		return &Lost{fmt.Sprintf("loss: thermal escape, v=%f",j.Velocity),ThermalEscape}
+	}
+	if l := IsNaN(j); l != nil {
+		return l
 	}
 	if rand.Float64() > math.Exp(-j.FlightTime/TAU) {
 		return &Lost{fmt.Sprintf("loss: photodestruction, t=%f",j.FlightTime),Photodestruction}
