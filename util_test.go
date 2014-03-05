@@ -5,6 +5,10 @@ import "math"
 const NUM = 1e6
 const TOL = 1e-2
 
+func newJ() *J {
+	return &J{P:new(P)}
+}
+
 func diff(a,b float64) float64 {
 	return math.Abs(a-b)
 }
