@@ -31,7 +31,6 @@ func Jump(p *P) (*J,*Lost) {
 func VondrakJump(p *P) (*J,*Lost) {
 	j := &J{P:p}
 	VondrakZenith(j)
-	VondrakSunrise(j)
 	VondrakTemperature(j)
 	RandVelocity(j)
 	ButlerRandDirection(j)
