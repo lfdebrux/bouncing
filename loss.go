@@ -4,7 +4,7 @@ import "fmt"
 import "math"
 import "math/rand"
 
-const TAU = 6.7e4 // seconds // from Butler1997
+var TAU = 6.7e4 // seconds // from Butler1997
 var FSTABLE = []float64{0.4e-2,0.9e-2,4e-2,11e-2}
 
 type LostType int
