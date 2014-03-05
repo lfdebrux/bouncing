@@ -13,7 +13,13 @@ func testT(f JumpMethod,phi float64) float64 {
 	j := makeTempJ(phi)
 	f(j)
 	return j.Temperature
-} 
+}
+
+func testSolarZenithT(f JumpMethod, solarzenith float64) (float64, *Lost) {
+	j := &J{P:&P{SolarZenith:solarzenith}}
+	loss := f(j)
+	return j.Temperature,loss
+}
 
 func BenchmarkTemperature(b *testing.B) {
 	for i := 0; i < b.N; i++ {
@@ -67,6 +73,18 @@ func TestTemperatureSymmetric(t *testing.T) {
 		if math.Abs(testT(ButlerTemperature,phi) - testT(ButlerTemperature,math.Pi-phi)) > TOL {
 			t.Log(testT(ButlerTemperature,phi) - testT(ButlerTemperature,math.Pi-phi))
 			t.Errorf("Temperature function should be symmetric, but Temperature(%f)=%f!=Temperature(%f)=%f",phi,testT(ButlerTemperature,phi),math.Pi-phi,testT(ButlerTemperature,math.Pi-phi))
+		}
+	}
+}
+
+func TestVondrakTemperatureNaN(t *testing.T) {
+	for solarzenith := 0.0; solarzenith < math.Pi; solarzenith += 0.1 {
+		temp, loss := testSolarZenithT(VondrakTemperature, solarzenith)
+		if math.IsNaN(temp) && loss == nil {
+			t.Errorf("VondrakTemperature did not detect NaN temperature %v at solarzenith=%v",temp,solarzenith)
+		}
+		if !math.IsNaN(temp) && loss != nil {
+			t.Errorf("VondrakTemperature falsely detected NaN temperature at solarzenith=%v, temperature=%v",solarzenith,temp)
 		}
 	}
 }
