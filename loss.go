@@ -27,26 +27,35 @@ func (l *Lost) Error() string {
 
 func IsNaN(j *J) *Lost {
 	msg := "loss:"
-	switch {
-	case math.IsNaN(j.Phi):
+	if math.IsNaN(j.Phi) {
 		msg += " j.Phi is NaN"
-	case math.IsNaN(j.Beta):
+	}
+	if math.IsNaN(j.Beta) {
 		msg += " j.Beta is NaN"
-	case math.IsNaN(j.Time):
+	}
+	if math.IsNaN(j.Time) {
 		msg += " j.Time is NaN"
-	case math.IsNaN(j.SolarZenith):
+	}
+	if math.IsNaN(j.SolarZenith) {
 		msg += " j.SolarZenith is NaN"
-	case math.IsNaN(j.Velocity):
+	}
+	if math.IsNaN(j.Velocity) {
 		msg += " j.Velocity is NaN"
-	case math.IsNaN(j.Psi):
+	}
+	if math.IsNaN(j.Psi) {
 		msg += " j.Psi is NaN"
-	case math.IsNaN(j.ThetaDash):
+	}
+	if math.IsNaN(j.ThetaDash) {
 		msg += " j.ThetaDash is NaN"
-	case math.IsNaN(j.Temperature):
+	}
+	if math.IsNaN(j.Temperature) {
 		msg += " j.Temperature is NaN"
-	case math.IsNaN(j.FlightTime):
+	}
+	if math.IsNaN(j.FlightTime) {
 		msg += " j.FlightTime is NaN"
-	default:
+	}
+	// no NaNs detected
+	if msg == "loss:" {
 		return nil
 	}
 	return &Lost{msg, Error}
