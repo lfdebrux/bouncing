@@ -4,6 +4,13 @@ import "testing"
 
 import "math"
 
+func BenchmarkIsLost(b *testing.B) {
+	j := newJ()
+	for i := 0; i < b.N; i++ {
+		IsLost(j)
+	}
+}
+
 func percentPhoto(j *J) float64 {
 	j.Phi = math.Pi/2
 	j.Velocity = 0
@@ -89,6 +96,14 @@ func TestIsCaptureExpectedValues(t *testing.T) {
 			t.Log(diff(pc,f))
 			t.Errorf("Expect to capture %f%% at %d*Pi/18 latitude (%f), instead lost %f",f*100,6+i,j.Phi,pc*100)
 		}
+	}
+}
+
+func BenchmarkIsNaN(b *testing.B) {
+	j := &J{P:new(P)}
+	j.Phi = math.NaN()
+	for i := 0; i < b.N; i++ {
+		IsNaN(j)
 	}
 }
 
