@@ -10,6 +10,14 @@ func TestJump(t *testing.T) {
 	Jump(p)
 }
 
+func TestVondrakJump(t *testing.T) {
+	InitMaxwellian()
+	defer FreeMaxwellian()
+
+	p := RandParticle(Water)
+	VondrakJump(p)
+}
+
 func TestNewJump(t *testing.T) {
 	InitMaxwellian()
 	defer FreeMaxwellian()

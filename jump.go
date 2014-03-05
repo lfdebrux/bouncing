@@ -25,7 +25,27 @@ func Jump(p *P) (*J,*Lost) {
 		loss = IsCaptureButler(j)
 	}
 
-	return j,loss
+	return j, loss
+}
+
+func VondrakJump(p *P) (*J,*Lost) {
+	j := &J{P:p}
+	VondrakZenith(j)
+	VondrakSunrise(j)
+	VondrakTemperature(j)
+	RandVelocity(j)
+	ButlerRandDirection(j)
+	VondrakPositionJump(j)
+	VondrakFlightTime(j)
+
+	j.Time += j.FlightTime
+
+	loss := IsLost(j)
+	if loss == nil {
+		loss = IsCaptureVondrak(j)
+	}
+
+	return j, loss
 }
 
 func NewJump(funcs ...JumpMethod) JumpFunc {
