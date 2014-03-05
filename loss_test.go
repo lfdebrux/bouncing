@@ -91,3 +91,25 @@ func TestIsCaptureExpectedValues(t *testing.T) {
 		}
 	}
 }
+
+func TestIsNaN(t *testing.T) {
+	j := &J{P:new(P)}
+	j.Phi = math.NaN()
+	loss := IsNaN(j)
+	if loss == nil || loss.HowLost != Error {
+		t.Errorf("IsNaN did not detect NaN, loss=%v", loss)
+	} else if loss.Error() != "loss: j.Phi is NaN" {
+		t.Errorf("IsNaN did not detect correct NaN, loss=%v", loss)
+	}
+}
+
+func TestIsNaNMultiple(t *testing.T) {
+	j := &J{P:new(P)}
+	j.Beta = math.NaN()
+	j.Temperature = math.NaN()
+
+	loss := IsNaN(j)
+	if loss == nil || loss.Error() != "loss: j.Beta is NaN j.Temperature is NaN" {
+		t.Errorf("IsNaN did not correctly detect multiple NaN, loss=%v",loss)
+	}
+}

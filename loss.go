@@ -11,7 +11,6 @@ type LostType int
 
 const (
 	Error LostType = iota
-	MathError
 	ThermalEscape
 	Photodestruction
 	Capture
@@ -27,27 +26,30 @@ func (l *Lost) Error() string {
 }
 
 func IsNaN(j *J) *Lost {
+	msg := "loss:"
 	switch {
 	case math.IsNaN(j.Phi):
-		return &Lost{"loss: j.Phi is NaN",MathError}
+		msg += " j.Phi is NaN"
 	case math.IsNaN(j.Beta):
-		return &Lost{"loss: j.Beta is NaN",MathError}
+		msg += " j.Beta is NaN"
 	case math.IsNaN(j.Time):
-		return &Lost{"loss: j.Time is NaN",MathError}
+		msg += " j.Time is NaN"
 	case math.IsNaN(j.SolarZenith):
-		return &Lost{"loss: j.SolarZenith is NaN",MathError}
+		msg += " j.SolarZenith is NaN"
 	case math.IsNaN(j.Velocity):
-		return &Lost{"loss: j.Velocity is NaN",MathError}
+		msg += " j.Velocity is NaN"
 	case math.IsNaN(j.Psi):
-		return &Lost{"loss: j.Psi is NaN",MathError}
+		msg += " j.Psi is NaN"
 	case math.IsNaN(j.ThetaDash):
-		return &Lost{"loss: j.ThetaDash is NaN",MathError}
+		msg += " j.ThetaDash is NaN"
 	case math.IsNaN(j.Temperature):
-		return &Lost{"loss: j.Temperature is NaN",MathError}
+		msg += " j.Temperature is NaN"
 	case math.IsNaN(j.FlightTime):
-		return &Lost{"loss: j.FlightTime is NaN",MathError}
+		msg += " j.FlightTime is NaN"
+	default:
+		return nil
 	}
-	return nil
+	return &Lost{msg, Error}
 }
 
 func IsLost(j *J) *Lost {
