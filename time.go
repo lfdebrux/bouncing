@@ -34,8 +34,8 @@ func TimeToSunrise(time, phi, beta float64) float64 {
 func VondrakZenith(j *J) *Lost {
 	j.SolarZenith = math.Acos( math.Sin(j.Phi)*math.Cos(j.Beta) )
 	if j.SolarZenith > math.Pi/2 {
-		j.Beta = 3*math.Pi/2
 		j.Time += (j.Beta - math.Pi/2)*375704
+		j.Beta = 3*math.Pi/2
 		j.SolarZenith = math.Pi/2
 	}
 	return nil
