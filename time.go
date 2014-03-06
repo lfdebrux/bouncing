@@ -3,6 +3,7 @@ package bouncing
 import "math"
 
 const LUNARDAY = 2.3606e6 // seconds
+const TIMEPERRAD = 375704 // LUNARDAY/2pi // seconds/rad
 
 func SolarHourAngle(time, phi, beta float64) float64 {
 	hr := beta + 2*math.Pi*time/LUNARDAY
@@ -34,7 +35,7 @@ func TimeToSunrise(time, phi, beta float64) float64 {
 func VondrakZenith(j *J) *Lost {
 	j.SolarZenith = math.Acos( math.Sin(j.Phi)*math.Cos(j.Beta) )
 	if j.SolarZenith > math.Pi/2 {
-		j.Time += (j.Beta - math.Pi/2)*375704
+		j.Time += (j.Beta - math.Pi/2)*TIMEPERRAD
 		j.Beta = 3*math.Pi/2
 		j.SolarZenith = math.Pi/2
 	}
