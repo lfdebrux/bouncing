@@ -25,6 +25,10 @@ func (l *Lost) Error() string {
 	return l.err
 }
 
+func NewLost(msg string, typ LostType) *Lost {
+	return &Lost{err:msg,HowLost:typ}
+}
+
 func IsNaN(j *J) *Lost {
 	msg := "loss:"
 	if math.IsNaN(j.Phi) {
@@ -96,6 +100,50 @@ func IsCaptureVondrak(j *J) *Lost {
 	}
 	if rand.Float64() < fstable {
 		return &Lost{fmt.Sprintf("loss: capture by stable region, phi=%f",j.Phi),Capture}
+	}
+	return nil
+}
+
+// TODO: reduce repetition here
+func SanityChecks(j *J) *Lost {
+	if j.Time < 0 {
+		return NewLost("Error: j.Time is negative",Error)
+	}
+	if j.FlightTime < 0 {
+		return NewLost("Error: j.FlightTime is negative",Error)
+	}
+	if j.Velocity < 0 {
+		return NewLost("Error: j.Velocity is negative",Error)
+	}
+	if j.Temperature < 0 {
+		return NewLost("Error: j.Temperature is negative",Error)
+	}
+	if j.Phi < 0 {
+		return NewLost("Error: j.Phi is negative",Error)
+	}
+	if j.Phi > math.Pi {
+		return NewLost("Error: j.Phi > pi",Error)
+	}
+	if j.Beta < 0 {
+		return NewLost("Error: j.Beta is negative",Error)
+	}
+	if j.Beta > 2*math.Pi {
+		return NewLost("Error: j. Beta > 2pi",Error)
+	}
+	if j.Psi < 0 {
+		return NewLost("Error: j.Psi is negative",Error)
+	}
+	if j.Psi > 2*math.Pi {
+		return NewLost("Error: j.Psi > 2pi",Error)
+	}
+	if j.ThetaDash < 0 {
+		return NewLost("Error: j.ThetaDash is negative",Error)
+	}
+	if j.ThetaDash > math.Pi/2 {
+		return NewLost("Error: j.ThetaDash > pi/2",Error)
+	}
+	if j.SolarZenith < 0 {
+		return NewLost("Error: j.SolarZenith is negative",Error)
 	}
 	return nil
 }
