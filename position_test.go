@@ -25,10 +25,10 @@ func TestButlerPositionJumpLongitude(t *testing.T) {
 		j := makePosJ(math.Pi/2,0,v0,math.Pi/2,math.Pi/4)
 		ButlerPositionJump(j)
 		if j.Beta < 0 {
-			t.Fatal("ButlerPositionJump beta is negative")
+			t.Fatal("ButlerPositionJump: j.Beta is negative")
 		}
 		if j. Beta > 2*math.Pi {
-			t.Fatal("ButlerPositionJump beta is greater than 2pi")
+			t.Fatal("ButlerPositionJump: j.Beta is greater than 2pi")
 		}
 	}
 }
@@ -38,10 +38,10 @@ func TestButlerPositionJumpColatitude(t *testing.T) {
 		j := makePosJ(math.Pi/2,0,v0,0,math.Pi/4)
 		ButlerPositionJump(j)
 		if j.Phi < 0 {
-			t.Fatal("ButlerPositionJump phi is negative")
+			t.Fatal("ButlerPositionJump: j.Phi is negative")
 		}
 		if j. Phi > math.Pi {
-			t.Fatal("ButlerPositionJump phi is greater than pi")
+			t.Fatal("ButlerPositionJump: j.Phi is greater than pi")
 		}
 	}
 }
@@ -51,10 +51,10 @@ func TestVondrakPositionJumpLongitude(t *testing.T) {
 		j := makePosJ(math.Pi/2,0,v0,math.Pi/2,math.Pi/4)
 		VondrakPositionJump(j)
 		if j.Beta < 0 {
-			t.Fatal("VondrakPositionJump beta is negative")
+			t.Fatal("VondrakPositionJump: j.Beta is negative")
 		}
 		if j. Beta > 2*math.Pi {
-			t.Fatal("VondrakPositionJump beta is greater than 2pi")
+			t.Fatal("VondrakPositionJump: j.Beta is greater than 2pi")
 		}
 	}
 }
@@ -64,13 +64,35 @@ func TestVondrakPositionJumpColatitude(t *testing.T) {
 		j := makePosJ(math.Pi/2,0,v0,0,math.Pi/4)
 		VondrakPositionJump(j)
 		if j.Phi < 0 {
-			t.Fatal("VondrakPositionJump phi is negative")
+			t.Fatal("VondrakPositionJump: j.Phi is negative")
 		}
 		if j. Phi > math.Pi {
-			t.Fatal("VondrakPositionJump phi is greater than pi")
+			t.Fatal("VondrakPositionJump: j.Phi is greater than pi")
 		}
 	}
 }
+
+func TestToLongitude(t *testing.T) {
+	if beta := toLongitude(0); beta != 0 {
+		t.Errorf("toLongitude(0) should be 0, instead go %v",beta)
+	}
+	if beta := toLongitude(math.Pi); beta != math.Pi {
+		t.Errorf("toLongitude(pi) should be pi, instead got %vpi",beta/math.Pi)
+	}
+	if beta := toLongitude(3*math.Pi); beta != math.Pi {
+		t.Errorf("toLongitude(3pi) should be pi, instead got %vpi",beta/math.Pi)
+	}
+	if beta := toLongitude(-math.Pi); beta != math.Pi {
+		t.Errorf("toLongitude(-pi) should be pi, instead got %vpi",beta/math.Pi)
+	}
+	if beta := toLongitude(-math.Pi/2); beta != 3*math.Pi/2 {
+		t.Errorf("toLongitude(-pi/2) should be 3pi/2, instead got %vpi",beta/math.Pi)
+	}
+	if beta := toLongitude(-5*math.Pi/2); beta != 3*math.Pi/2 {
+		t.Errorf("toLongitude(-5pi/2) should be 3pi/2, instead got %vpi",beta/math.Pi)
+	}
+}
+
 // func TestPositionWithLeapfrog(t *testing.T) {
 	// 
 // }

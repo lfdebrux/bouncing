@@ -2,6 +2,14 @@ package bouncing
 
 import "math"
 
+func toLongitude(beta float64) float64 {
+	beta = math.Mod(beta,2*math.Pi)
+	if beta < 0 {
+		beta = 2*math.Pi + beta
+	}
+	return beta
+}
+
 func ButlerPositionJump(j *J) *Lost {
 	phi0,beta0 := j.Phi,j.Beta
 	v,psi,thetadash := j.Velocity,j.Psi,j.ThetaDash
@@ -23,7 +31,7 @@ func ButlerPositionJump(j *J) *Lost {
 	}
 	
 	j.Phi = phi
-	j.Beta = math.Mod(beta,2*math.Pi)
+	j.Beta = toLongitude(beta)
 
 	return nil
 }
@@ -45,7 +53,7 @@ func VondrakPositionJump(j *J) *Lost {
 	}
 	
 	j.Phi = phi
-	j.Beta = math.Mod(beta,2*math.Pi)
+	j.Beta = toLongitude(beta)
 
 	return nil
 }
