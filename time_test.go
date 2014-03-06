@@ -31,8 +31,8 @@ func testVondrakZenithBeta(t *testing.T, phi, beta, beta1 float64, msg string) {
 func TestVondrakZenithBeta(t *testing.T) {
 	testVondrakZenithBeta(t, math.Pi/2, 0, 0, "VondrakZenith(pi/2, 0) -- j.Beta = 0 not %v pi")
 	testVondrakZenithBeta(t, 0, 0, 0, "VondrakZenith(0, 0) -- j.Beta = 0 not %v pi")
-	testVondrakZenithBeta(t, math.Pi/2, math.Pi/2, 0, "VondrakZenith(pi/2, pi/2) -- j.Beta = 0 not %v pi")
-	testVondrakZenithBeta(t, math.Pi/2, math.Pi/2 + 1e-19, 3*math.Pi/2, "VondrakZenith(pi/2, pi/2 + small) -- j.Beta = 3pi/2 not %v pi")
+	testVondrakZenithBeta(t, math.Pi/2, math.Pi/2, math.Pi/2, "VondrakZenith(pi/2, pi/2) -- j.Beta = pi/2 not %v pi")
+	testVondrakZenithBeta(t, math.Pi/2, math.Pi/2 + 1e-16, 3*math.Pi/2, "VondrakZenith(pi/2, pi/2 + small) (just after dusk terminator) -- j.Beta = 3pi/2 not %v pi")
 	testVondrakZenithBeta(t, math.Pi/2, math.Pi, 3*math.Pi/2, "VondrakZenith(pi/2, pi) -- j.Beta = 3pi/2 not %v pi")
 }
 
@@ -55,16 +55,16 @@ func TestVondrakZenithSolarZenith(t *testing.T) {
 func testVondrakZenithTime(t *testing.T, phi, beta, time float64, msg string) {
 	j := &J{P:&P{Beta:beta,Phi:phi}}
 	VondrakZenith(j)
-	if j.Time != time {
+	if !almosteq(j.Time, time) {
 		t.Errorf(msg, j.Time/TIMEPERRAD/math.Pi)
 	}
 }
 
 func TestVondrakZenithTime(t *testing.T) {
 	testVondrakZenithTime(t, math.Pi/2, 0, 0, "VondrakZenith(beta = 0) -- j.Time = 0 not %v pi TIMEPERRAD")
-	testVondrakZenithTime(t, math.Pi/2, math.Pi/2, math.Pi*TIMEPERRAD, "VondrakZenith(beta = pi/2) (dusk terminator) -- j.Time = 0 not %v pi TIMEPERRAD")
 	testVondrakZenithTime(t, 0, 0, 0, "VondrakZenith(0, 0) -- j.Time = 0 not %v pi TIMEPERRAD")
-	testVondrakZenithTime(t, math.Pi/2, math.Pi/2 + 1e-19, math.Pi*TIMEPERRAD, "VondrakZenith(beta = pi/2 + small) (dusk terminator) -- j.Time = pi*TIMEPERRAD not %v pi TIMEPERRAD")
+	testVondrakZenithTime(t, math.Pi/2, math.Pi/2, 0, "VondrakZenith(beta = pi/2) (dusk terminator) -- j.Time = 0 not %v pi TIMEPERRAD")
+	testVondrakZenithTime(t, math.Pi/2, math.Pi/2 + 1e-16, math.Pi*TIMEPERRAD, "VondrakZenith(beta = pi/2 + small) (just after dusk terminator) -- j.Time = pi*TIMEPERRAD not %v pi TIMEPERRAD")
 	testVondrakZenithTime(t, math.Pi/2, math.Pi, math.Pi*TIMEPERRAD/2, "VondrakZenith(beta = pi) -- j.Time = pi/2 TIMEPERRAD not %v pi TIMEPERRAD")
 	testVondrakZenithTime(t, math.Pi/2, 3*math.Pi/2, 0, "VondrakZenith(beta = 3pi/2) (dawn terminator) -- j.Time = 0 not %v pi TIMEPERRAD")
 	testVondrakZenithTime(t, math.Pi/2, 3*math.Pi/2 - 1e-19, 0, "VondrakZenith(beta = 3pi/2 - small) (just before dawn terminator) -- j.Time = 0 not %v pi TIMEPERRAD")
