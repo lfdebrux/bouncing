@@ -6,7 +6,8 @@ func TestJump(t *testing.T) {
 	InitMaxwellian()
 	defer FreeMaxwellian()
 
-	p := RandParticle(Water)
+	p := new(P)
+	
 	Jump(p)
 }
 
@@ -14,7 +15,8 @@ func TestVondrakJump(t *testing.T) {
 	InitMaxwellian()
 	defer FreeMaxwellian()
 
-	p := RandParticle(Water)
+	p := new(P)
+	
 	VondrakJump(p)
 }
 
@@ -23,7 +25,8 @@ func TestNewJump(t *testing.T) {
 	defer FreeMaxwellian()
 
 	jump := NewJump(ButlerTemperature,RandVelocity,RandDirection,ButlerPositionJump,FlightTime)
-	p := RandParticle(Water)
+	p := new(P)
+	
 
 	jump(p)
 }
@@ -32,7 +35,8 @@ func BenchmarkJump(b *testing.B) {
 	InitMaxwellian()
 	defer FreeMaxwellian()
 	
-	p := RandParticle(Water)
+	p := new(P)
+	
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		Jump(p)
@@ -43,7 +47,8 @@ func BenchmarkVondrakJump(b *testing.B) {
 	InitMaxwellian()
 	defer FreeMaxwellian()
 	
-	p := RandParticle(Water)
+	p := new(P)
+	
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		VondrakJump(p)
@@ -56,7 +61,8 @@ func BenchmarkNewJump(b *testing.B) {
 	
 	jump := NewJump(ButlerTemperature,RandVelocity,RandDirection,ButlerPositionJump,FlightTime)
 
-	p := RandParticle(Water)
+	p := new(P)
+	
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		jump(p)

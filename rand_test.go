@@ -40,3 +40,31 @@ func TestRandDirectionInRange(t *testing.T) {
 		}
 	}
 }
+
+func TestRandInitialPositionButlerInRange(t *testing.T) {
+	const num = 100000
+	for i := 0; i < num; i++ {
+		p := new(P)
+		RandInitialPositionButler(p)
+		if p.Phi >= math.Pi || 0 > p.Phi {
+			t.Fatalf("RandInitialPositionButler(p) => p.Phi = %f Pi; want 0..Pi",p.Phi/math.Pi)
+		}
+		if p.Beta >= 2*math.Pi || 0 > p.Beta {
+			t.Fatalf("RandInitialPositionButler(p) => p.Beta = %f Pi; want 0..2Pi",p.Beta/math.Pi)
+		}
+	}
+}
+
+func TestRandInitialPositionVondrakInRange(t *testing.T) {
+	const num = 100000
+	for i := 0; i < num; i++ {
+		p := new(P)
+		RandInitialPositionVondrak(p)
+		if p.Phi >= math.Pi || 0 > p.Phi {
+			t.Fatalf("RandInitialPositionVondrak(p) => p.Phi = %f Pi; want 0..Pi",p.Phi/math.Pi)
+		}
+		if math.Pi/2 < p.Beta && p.Beta < 3*math.Pi/2 {
+			t.Fatalf("RandInitialPositionVondrak(p) => p.Beta = %f Pi; want 3Pi/2..Pi/2",p.Beta/math.Pi)
+		}
+	}
+}

@@ -34,7 +34,7 @@ func ButlerJump(p *P) (*J, *Lost) {
 	RandVelocity(j)
 	ButlerRandDirection(j)
 	ButlerPositionJump(j)
-	ButlerFlightTime(j)
+	VondrakFlightTime(j) // ButlerFlightTime is NaNy
 
 	j.Time += j.FlightTime
 

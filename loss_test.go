@@ -40,11 +40,11 @@ func TestIsPhotoZero(t *testing.T) {
 func TestIsPhotoTau(t *testing.T) {
 	j := &J{P:new(P)}
 
-	j.FlightTime = TAU
+	j.FlightTime = Tau
 
 	if pc := percentPhoto(j); !almosteq(pc, 1 - 1/math.E) {
 		t.Log(diff(pc,1-1/math.E))
-		t.Errorf("Expect 1 - 1/e=%f particles to be photodestructed for flight time tau=%f, instead %f%% were lost",1-1/math.E,TAU,pc)
+		t.Errorf("Expect 1 - 1/e=%f particles to be photodestructed for flight time tau=%f, instead %f%% were lost",1-1/math.E,Tau,pc)
 	}
 }
 
@@ -69,17 +69,17 @@ func TestIsCaptureEquator(t *testing.T) {
 }
 
 func testButlerFstable(lat float64) float64 {
-	return FSTABLE[int(math.Ceil(lat*18/math.Pi))-6]
+	return fstable[int(math.Ceil(lat*18/math.Pi))-6]
 }
 
 func TestButlerFstableLessThan60(t *testing.T) {
-	if g := testButlerFstable(5.1*math.Pi/18); g != FSTABLE[0] {
-		t.Errorf("ButlerFstable at 5*Pi/18 < latitude < 6*Pi/18 should be %f, instead got %f",FSTABLE[0],g)
+	if g := testButlerFstable(5.1*math.Pi/18); g != fstable[0] {
+		t.Errorf("ButlerFstable at 5*Pi/18 < latitude < 6*Pi/18 should be %f, instead got %f",fstable[0],g)
 	}
 }
 
 func TestButlerFstable(t *testing.T) {
-	for i,f := range FSTABLE {
+	for i,f := range fstable {
 		l := (5.5+float64(i))*math.Pi/18
 		if g := testButlerFstable(l); g != f {
 			t.Log(l*18/math.Pi)
@@ -89,7 +89,7 @@ func TestButlerFstable(t *testing.T) {
 }
 
 func TestIsCaptureExpectedValues(t *testing.T) {
-	for i,f := range FSTABLE {
+	for i,f := range fstable {
 		j := &J{P:new(P)}
 		j.Phi = math.Pi/2 - (6+float64(i))*math.Pi/18
 		if pc := percentCapture(j); !almosteq(pc,f) {

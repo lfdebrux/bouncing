@@ -1,11 +1,13 @@
 package bouncing
 
-import "fmt"
-import "math"
-import "math/rand"
+import (
+	"fmt"
 
-var TAU = 6.7e4 // seconds // from Butler1997
-var FSTABLE = []float64{0.4e-2,0.9e-2,4e-2,11e-2}
+	"math"
+	"math/rand"
+)
+
+var Tau = 6.7e4 // seconds // from Butler1997
 
 type LostType int
 
@@ -72,16 +74,17 @@ func IsLost(j *J) *Lost {
 	if l := IsNaN(j); l != nil {
 		return l
 	}
-	if rand.Float64() > math.Exp(-j.FlightTime/TAU) {
+	if rand.Float64() > math.Exp(-j.FlightTime/Tau) {
 		return &Lost{fmt.Sprintf("loss: photodestruction, t=%f",j.FlightTime),Photodestruction}
 	}
 	return nil
 }
 
+var fstable = []float64{0.4e-2,0.9e-2,4e-2,11e-2}
 func IsCaptureButler(j *J) *Lost {
 	lat := math.Abs(math.Pi/2 - j.Phi)
 	if lat > 5*math.Pi/18 {
-		if rand.Float64() < FSTABLE[int(math.Ceil(lat*18/math.Pi))-6] {
+		if rand.Float64() < fstable[int(math.Ceil(lat*18/math.Pi))-6] {
 			return &Lost{fmt.Sprintf("loss: capture by stable region, phi=%f",j.Phi),Capture}
 		}
 	}
@@ -106,44 +109,49 @@ func IsCaptureVondrak(j *J) *Lost {
 
 // TODO: reduce repetition here
 func SanityChecks(j *J) *Lost {
+	msg := "error:"
 	if j.Time < 0 {
-		return NewLost("Error: j.Time is negative",Error)
+		msg += " j.Time < 0"
 	}
 	if j.FlightTime < 0 {
-		return NewLost("Error: j.FlightTime is negative",Error)
+		msg += " j.FlightTime < 0"
 	}
 	if j.Velocity < 0 {
-		return NewLost("Error: j.Velocity is negative",Error)
+		msg += " j.Velocity < 0"
 	}
 	if j.Temperature < 0 {
-		return NewLost("Error: j.Temperature is negative",Error)
+		msg += " j.Temperature < 0"
 	}
 	if j.Phi < 0 {
-		return NewLost("Error: j.Phi is negative",Error)
+		msg += " j.Phi < 0"
 	}
 	if j.Phi > math.Pi {
-		return NewLost("Error: j.Phi > pi",Error)
+		msg += " j.Phi > pi"
 	}
 	if j.Beta < 0 {
-		return NewLost("Error: j.Beta is negative",Error)
+		msg += " j.Beta < 0"
 	}
 	if j.Beta > 2*math.Pi {
-		return NewLost("Error: j. Beta > 2pi",Error)
+		msg += " j. Beta > 2pi"
 	}
 	if j.Psi < 0 {
-		return NewLost("Error: j.Psi is negative",Error)
+		msg += " j.Psi < 0"
 	}
 	if j.Psi > 2*math.Pi {
-		return NewLost("Error: j.Psi > 2pi",Error)
+		msg += " j.Psi > 2pi"
 	}
 	if j.ThetaDash < 0 {
-		return NewLost("Error: j.ThetaDash is negative",Error)
+		msg += " j.ThetaDash < 0"
 	}
 	if j.ThetaDash > math.Pi/2 {
-		return NewLost("Error: j.ThetaDash > pi/2",Error)
+		msg += " j.ThetaDash > pi/2"
 	}
 	if j.SolarZenith < 0 {
-		return NewLost("Error: j.SolarZenith is negative",Error)
+		msg += " j.SolarZenith < 0"
 	}
-	return nil
+	// all tests passed
+	if msg == "error:" {
+		return nil
+	}
+	return NewLost(msg,Error)
 }
