@@ -2,8 +2,9 @@ package bouncing
 
 import (
 	"errors"
-	"flag"
 	"fmt"
+	"flag"
+	"os"
 )
 
 var customJumpFlags flag.FlagSet
@@ -36,6 +37,13 @@ func init() {
 	customJumpFlags.String("PositionJump", "Butler", "Butler, Vondrak")
 	customJumpFlags.String("FlightTime", "Mine", "Mine, Butler, Vondrak")
 	customJumpFlags.String("IsCapture", "Butler", "Butler, Vondrak")
+
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, "Usage of %s:\n", os.Args[0])
+		flag.PrintDefaults()
+		fmt.Fprintf(os.Stderr, "\nIf -JumpFunc=\"Custom\":\n")
+		customJumpFlags.PrintDefaults()
+	}
 }
 
 func ParseFlags() (JumpFunc, func() *P) {
