@@ -31,6 +31,7 @@ func NewLost(msg string, typ LostType) *Lost {
 	return &Lost{err:msg,HowLost:typ}
 }
 
+// TODO: reduce repition here
 func IsNaN(j *J) *Lost {
 	msg := "loss:"
 	if math.IsNaN(j.Phi) {
@@ -69,13 +70,13 @@ func IsNaN(j *J) *Lost {
 
 func IsLost(j *J) *Lost {
 	if j.Velocity > VESC {
-		return &Lost{fmt.Sprintf("loss: thermal escape, v=%f",j.Velocity),ThermalEscape}
+		return &Lost{fmt.Sprintf("loss: %v thermal escape, v=%f", j.Time, j.Velocity), ThermalEscape}
 	}
 	if l := IsNaN(j); l != nil {
 		return l
 	}
 	if rand.Float64() > math.Exp(-j.FlightTime/Tau) {
-		return &Lost{fmt.Sprintf("loss: photodestruction, t=%f",j.FlightTime),Photodestruction}
+		return &Lost{fmt.Sprintf("loss: %v photodestruction, flighttime=%f", j.Time, j.FlightTime), Photodestruction}
 	}
 	return nil
 }
@@ -85,7 +86,7 @@ func IsCaptureButler(j *J) *Lost {
 	lat := math.Abs(math.Pi/2 - j.Phi)
 	if lat > 5*math.Pi/18 {
 		if rand.Float64() < fstable[int(math.Ceil(lat*18/math.Pi))-6] {
-			return &Lost{fmt.Sprintf("loss: capture by stable region, phi=%f",j.Phi),Capture}
+			return &Lost{fmt.Sprintf("loss: %v capture by stable region, (beta, phi)=(%v, %v)", j.Time, j.Beta, j.Phi), Capture}
 		}
 	}
 	return nil
@@ -102,7 +103,7 @@ func IsCaptureVondrak(j *J) *Lost {
 		return nil
 	}
 	if rand.Float64() < fstable {
-		return &Lost{fmt.Sprintf("loss: capture by stable region, phi=%f",j.Phi),Capture}
+			return &Lost{fmt.Sprintf("loss: %v capture by stable region, (beta, phi)=(%v, %v)", j.Time, j.Beta, j.Phi), Capture}
 	}
 	return nil
 }

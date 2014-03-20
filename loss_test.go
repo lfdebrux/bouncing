@@ -128,3 +128,15 @@ func TestIsNaNMultiple(t *testing.T) {
 		t.Errorf("IsNaN did not correctly detect multiple NaN, loss=%v",loss)
 	}
 }
+
+var names = map[LostType]string{Error:"Error", ThermalEscape:"ThermalEscape", Photodestruction:"Photodestruction", Capture:"Capture"}
+
+func TestThermalEscape(t *testing.T) {
+	j := &J{P:new(P), Velocity: 2*VESC}
+
+	loss := IsLost(j)
+	t.Log(loss)
+	if loss.HowLost != ThermalEscape {
+		t.Errorf("Expecting j.HowLost = %s not ThermalEscape", names[loss.HowLost])
+	}
+}
