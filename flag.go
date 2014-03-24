@@ -43,7 +43,7 @@ func (f *jumpFlag) Set(value string) error {
 		for i, s := range vs {
 			f, ok := customJumpMethods[s]
 			if !ok {
-				return errors.New("invalid JumpMethod flag " + value)
+				return errors.New("invalid JumpMethod " + s)
 			}
 			fn[i] = f
 		}
