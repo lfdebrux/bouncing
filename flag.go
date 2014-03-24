@@ -4,62 +4,68 @@ import (
 	"errors"
 	"fmt"
 	"flag"
-	"os"
+	"strings"
 )
 
-var customJumpFlags flag.FlagSet
-
-var customJumpMethodFlags = map[string]map[string]JumpMethod {
-	"Temperature": {"Butler": ButlerTemperature, "Vondrak": VondrakTemperature},
-	"RandDirection": {"Mine": RandDirection, "Butler": ButlerRandDirection, "Vondrak": ButlerRandDirection},
-	"PositionJump": {"Butler": ButlerPositionJump, "Vondrak": VondrakPositionJump},
-	"FlightTime": {"Mine": FlightTime, "Butler": VondrakFlightTime, "Vondrak": VondrakFlightTime},
-	"IsCapture": {"Butler": IsCaptureButler, "Vondrak": IsCaptureVondrak},
+var customJumpMethods = map[string]JumpMethod {
+	"TemperatureButler": ButlerTemperature, "TemperatureVondrak": VondrakTemperature,
+	"RandDirectionMine": RandDirection, "RandDirectionButler": ButlerRandDirection, "RandDirectionVondrak": ButlerRandDirection,
+	"PositionJumpButler": ButlerPositionJump, "PositionJumpVondrak": VondrakPositionJump,
+	"FlightTimeMine": FlightTime, "FlightTimeButler": VondrakFlightTime, "FlightTimeVondrak": VondrakFlightTime,
+	"IsCaptureButler": IsCaptureButler, "IsCaptureVondrak": IsCaptureVondrak,
 }
 
-var jumpFuncFlag string
+type jumpFlag struct {
+	value string
+	jump JumpFunc
+}
+
+func (f *jumpFlag) String() string {
+	return f.value
+}
+
+func (f *jumpFlag) Set(value string) error {
+	switch value {
+	case "Jump":
+		f.jump = Jump
+	case "Butler":
+		f.jump = ButlerJump
+	case "Vondrak":
+		f.jump = VondrakJump
+	default:
+		vs := strings.Split(value, ",")
+		fn := make([]JumpMethod, len(vs))
+
+		for i, s := range strings.Split(value, ",") {
+			f, ok := customJumpMethods[s]
+			if !ok {
+				return errors.New("invalid JumpMethod flag " + value)
+			}
+			fn[i] = f
+		}
+
+		f.jump = NewJump(fn...)
+	}
+	return nil
+}
+
+var j jumpFlag
 var randPositionFuncFlag string
-var particletype ParticleType
+var typ ParticleType
 
 func init() {
-	flag.StringVar(&jumpFuncFlag, "JumpFunc", "Jump", "Butler, Vondrak, Jump, Custom")
+	j = jumpFlag{jump:Jump, value:"Jump"}
+	flag.Var(&j, "JumpFunc", "jump function to use. One of Butler, Vondrak, Jump, or a commma-separated list of JumpMethods")
 
-	flag.Var(&particletype,"ParticleType", "Water, Hydrogen")
+	flag.Var(&typ,"ParticleType", "Water, Hydrogen")
 
 	flag.StringVar(&randPositionFuncFlag, "RandInitialPosition", "Butler", "Butler, Vondrak")
 
 	flag.Float64Var(&Tau,"Tau", 6.7e4, "Photodestruction timescale in seconds")
-
-	customJumpFlags := flag.NewFlagSet("Custom JumpFunc", flag.ExitOnError)
-
-	customJumpFlags.String("Temperature", "Butler", "Butler, Vondrak")
-	customJumpFlags.String("RandDirection", "Mine", "Mine, Butler")
-	customJumpFlags.String("PositionJump", "Butler", "Butler, Vondrak")
-	customJumpFlags.String("FlightTime", "Mine", "Mine, Butler, Vondrak")
-	customJumpFlags.String("IsCapture", "Butler", "Butler, Vondrak")
-
-	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "Usage of %s:\n", os.Args[0])
-		flag.PrintDefaults()
-		fmt.Fprintf(os.Stderr, "\nIf -JumpFunc=\"Custom\":\n")
-		customJumpFlags.PrintDefaults()
-	}
 }
 
-func ParseFlags() (JumpFunc, func() *P) {
+func ParseFlags() (JumpFunc, ParticleGenerator) {
 	flag.Parse()
-
-	var jump JumpFunc
-	switch jumpFuncFlag {
-	case "Custom":
-		jump = parseCustomJumpFlags(flag.Args())
-	case "Jump":
-		jump = Jump
-	case "Butler":
-		jump = ButlerJump
-	case "Vondrak":
-		jump = VondrakJump
-	}
 
 	var randPosition func(*P)
 	switch randPositionFuncFlag {
@@ -70,47 +76,20 @@ func ParseFlags() (JumpFunc, func() *P) {
 	}
 
 	newParticle := func() *P {
-		p := &P{Type:particletype}
+		p := &P{Type:typ}
 		randPosition(p)
 		return p
 	}
 
 	PrintFlags()
 
-	return jump, newParticle
+	return j.jump, newParticle
 }
 
 func PrintFlags() {
-	printFlags := func(f *flag.Flag) {
+	flag.VisitAll( func(f *flag.Flag) {
 		fmt.Printf("--%v=%v\n",f.Name,f.Value)
-	}
-
-	flag.VisitAll(printFlags)
-
-	if customJumpFlags.Parsed() {
-		customJumpFlags.VisitAll(printFlags)
-	}
-}
-
-func customJumpMethodFlagsGet(s flag.FlagSet, name string) JumpMethod {
-	f := s.Lookup(name)
-	fn, ok := customJumpMethodFlags[f.Name][f.Value.String()]
-	if !ok {
-		panic("invalid JumpMethod flag")
-	}
-	return fn
-}
-
-func parseCustomJumpFlags(args []string) JumpFunc {
-	customJumpFlags.Parse(args)
-
-	tm := customJumpMethodFlagsGet(customJumpFlags, "Temperature")
-	rd := customJumpMethodFlagsGet(customJumpFlags, "RandDirection")
-	pj := customJumpMethodFlagsGet(customJumpFlags, "PositionJump")
-	ft := customJumpMethodFlagsGet(customJumpFlags, "FlightTime")
-	cp := customJumpMethodFlagsGet(customJumpFlags, "IsCapture")
-
-	return NewJump(tm,RandVelocity,rd,pj,ft,cp)
+	} )
 }
 
 // Implement flag.Value interfaces
@@ -131,7 +110,7 @@ func (p *ParticleType) Set(value string) error {
 	case "Hydrogen":
 		*p = Hydrogen
 	default:
-		return errors.New("invalid ParticleType flag value")
+		return errors.New("invalid ParticleType flag " + value)
 	}
 	return nil
 }

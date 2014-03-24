@@ -7,6 +7,8 @@ type P struct {
 	SolarZenith float64 // sun angle from zenith in radians
 }
 
+type ParticleGenerator func() *P
+
 type ParticleType int
 
 const (
