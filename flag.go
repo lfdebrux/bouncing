@@ -118,7 +118,7 @@ func init() {
 
 func PrintFlags() {
 	flag.VisitAll( func(f *flag.Flag) {
-		fmt.Printf("--%v=%v\n",f.Name,f.Value)
+		fmt.Printf("# --%v=%v\n",f.Name,f.Value)
 	} )
 }
 
