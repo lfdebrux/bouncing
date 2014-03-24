@@ -28,10 +28,14 @@ func (f *jumpFlag) Set(value string) error {
 	switch value {
 	case "Jump":
 		f.jump = Jump
+		f.value = "Jump=ButlerTemperature,RandVelocity,RandDirection,ButlerPositionJump,FlightTime"
 	case "Butler":
 		f.jump = ButlerJump
 	case "Vondrak":
 		f.jump = VondrakJump
+	case "JumpWithVondrak":
+		f.jump = JumpWithVondrak
+		f.value = "JumpWithVondrak=VondrakZenith;VondrakTemperature;RandVelocity;RandDirection;ButlerPositionJump;FlightTime;IsLost;IsCaptureVondrak"
 	default:
 		vs := strings.Split(value, ",")
 		fn := make([]JumpMethod, len(vs))

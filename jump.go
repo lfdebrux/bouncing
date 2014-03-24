@@ -28,6 +28,25 @@ func Jump(p *P) (*J,*Lost) {
 	return j, loss
 }
 
+func JumpWithVondrak(p *P) (*J, *Lost) {
+	j := &J{P:p}
+	VondrakZenith(j)
+	VondrakTemperature(j)
+	RandVelocity(j)
+	RandDirection(j)
+	ButlerPositionJump(j)
+	FlightTime(j)
+
+	j.Time += j.FlightTime
+
+	loss := IsLost(j)
+	if loss == nil {
+		loss = IsCaptureVondrak(j)
+	}
+
+	return j, loss
+}
+
 func ButlerJump(p *P) (*J, *Lost) {
 	j := &J{P:p}
 	ButlerTemperature(j)
