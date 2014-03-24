@@ -16,8 +16,8 @@ var customJumpMethods = map[string]JumpMethod {
 }
 
 type jumpFlag struct {
-	value string
 	jump JumpFunc
+	value string
 }
 
 func (f *jumpFlag) String() string {
@@ -36,7 +36,7 @@ func (f *jumpFlag) Set(value string) error {
 		vs := strings.Split(value, ",")
 		fn := make([]JumpMethod, len(vs))
 
-		for i, s := range strings.Split(value, ",") {
+		for i, s := range vs {
 			f, ok := customJumpMethods[s]
 			if !ok {
 				return errors.New("invalid JumpMethod flag " + value)
@@ -49,41 +49,67 @@ func (f *jumpFlag) Set(value string) error {
 	return nil
 }
 
+var particleMutators = map[string]ParticleMutator {
+	"RandInitialPositionButler": RandInitialPositionButler,
+	"RandInitialPositionVondrak": RandInitialPositionVondrak,
+}
+
+type particleFlag struct {
+	gen ParticleGenerator
+	value string
+}
+
+func (f *particleFlag) String() string {
+	return f.value
+}
+
+func (f *particleFlag) Set(value string) error {
+	f.value = value
+
+	switch value {
+	case "Butler":
+		f.gen = ParticleGeneratorButler
+	case "Vondrak":
+		f.gen = ParticleGeneratorVondrak
+	default:
+		vs := strings.Split(value, ",")
+		fn := make([]ParticleMutator, len(vs))
+
+		var typ ParticleType
+		switch vs[0] {
+		case "Water":
+			typ = Water
+		case "Hydrogen":
+			typ = Hydrogen
+		}
+
+		vs = vs[1:]
+
+		for i, s := range vs {
+			f, ok := particleMutators[s]
+			if !ok {
+				return errors.New("invalid ParticleMutator " + s)
+			}
+			fn[i] = f
+		}
+
+		f.gen = NewParticleGenerator(typ, fn...)
+	}
+
+	return nil
+}
+
 var j jumpFlag
-var randPositionFuncFlag string
-var typ ParticleType
+var p particleFlag
 
 func init() {
 	j = jumpFlag{jump:Jump, value:"Jump"}
 	flag.Var(&j, "JumpFunc", "jump function to use. One of Butler, Vondrak, Jump, or a commma-separated list of JumpMethods")
 
-	flag.Var(&typ,"ParticleType", "Water, Hydrogen")
-
-	flag.StringVar(&randPositionFuncFlag, "RandInitialPosition", "Butler", "Butler, Vondrak")
+	p = particleFlag{gen:ParticleGeneratorButler, value:"Butler"}
+	flag.Var(&p, "ParticleGenerator", "particle generator to use. One of Butler, Vondrak, or a commma-separated list of ParticleType and ParticleMutators")
 
 	flag.Float64Var(&Tau,"Tau", 6.7e4, "Photodestruction timescale in seconds")
-}
-
-func ParseFlags() (JumpFunc, ParticleGenerator) {
-	flag.Parse()
-
-	var randPosition func(*P)
-	switch randPositionFuncFlag {
-	case "Butler":
-		randPosition = RandInitialPositionButler
-	case "Vondrak":
-		randPosition = RandInitialPositionVondrak
-	}
-
-	newParticle := func() *P {
-		p := &P{Type:typ}
-		randPosition(p)
-		return p
-	}
-
-	PrintFlags()
-
-	return j.jump, newParticle
 }
 
 func PrintFlags() {
@@ -92,25 +118,10 @@ func PrintFlags() {
 	} )
 }
 
-// Implement flag.Value interfaces
-func (p ParticleType) String() string {
-	switch p {
-	case Water:
-		return "Water"
-	case Hydrogen:
-		return "Hydrogen"
-	}
-	return fmt.Sprint(p)
-}
+func ParseFlags() (JumpFunc, ParticleGenerator) {
+	flag.Parse()
 
-func (p *ParticleType) Set(value string) error {
-	switch value {
-	case "Water":
-		*p = Water
-	case "Hydrogen":
-		*p = Hydrogen
-	default:
-		return errors.New("invalid ParticleType flag " + value)
-	}
-	return nil
+	PrintFlags()
+
+	return j.jump, p.gen
 }
