@@ -9,14 +9,16 @@ import (
 
 var customJumpMethods = map[string]JumpMethod {
 	"TemperatureButler": ButlerTemperature, "TemperatureVondrak": VondrakTemperature,
-	"RandDirectionMine": RandDirection, "RandDirectionButler": ButlerRandDirection, "RandDirectionVondrak": ButlerRandDirection,
+	"RandVelocity": RandVelocity,
+	"RandDirection": RandDirection, "RandDirectionButler": ButlerRandDirection, "RandDirectionVondrak": ButlerRandDirection,
 	"PositionJumpButler": ButlerPositionJump, "PositionJumpVondrak": VondrakPositionJump,
-	"FlightTimeMine": FlightTime, "FlightTimeButler": VondrakFlightTime, "FlightTimeVondrak": VondrakFlightTime,
+	"FlightTime": FlightTime, "FlightTimeButler": VondrakFlightTime, "FlightTimeVondrak": VondrakFlightTime,
+	"IsLost": IsLost,
 	"IsCaptureButler": IsCaptureButler, "IsCaptureVondrak": IsCaptureVondrak,
 }
 
 type jumpFlag struct {
-	jump JumpFunc
+	jump *JumpFunc
 	value string
 }
 
@@ -27,14 +29,14 @@ func (f *jumpFlag) String() string {
 func (f *jumpFlag) Set(value string) error {
 	switch value {
 	case "Jump":
-		f.jump = Jump
+		*f.jump = Jump
 		f.value = "Jump=ButlerTemperature,RandVelocity,RandDirection,ButlerPositionJump,FlightTime"
 	case "Butler":
-		f.jump = ButlerJump
+		*f.jump = ButlerJump
 	case "Vondrak":
-		f.jump = VondrakJump
+		*f.jump = VondrakJump
 	case "JumpWithVondrak":
-		f.jump = JumpWithVondrak
+		*f.jump = JumpWithVondrak
 		f.value = "JumpWithVondrak=VondrakZenith;VondrakTemperature;RandVelocity;RandDirection;ButlerPositionJump;FlightTime;IsLost;IsCaptureVondrak"
 	default:
 		vs := strings.Split(value, ",")
@@ -48,7 +50,7 @@ func (f *jumpFlag) Set(value string) error {
 			fn[i] = f
 		}
 
-		f.jump = NewJump(fn...)
+		*f.jump = NewJump(fn...)
 	}
 	return nil
 }
@@ -59,7 +61,7 @@ var particleMutators = map[string]ParticleMutator {
 }
 
 type particleFlag struct {
-	gen ParticleGenerator
+	gen *ParticleGenerator
 	value string
 }
 
@@ -72,9 +74,9 @@ func (f *particleFlag) Set(value string) error {
 
 	switch value {
 	case "Butler":
-		f.gen = ParticleGeneratorButler
+		*f.gen = ParticleGeneratorButler
 	case "Vondrak":
-		f.gen = ParticleGeneratorVondrak
+		*f.gen = ParticleGeneratorVondrak
 	default:
 		vs := strings.Split(value, ",")
 		fn := make([]ParticleMutator, len(vs))
@@ -97,35 +99,43 @@ func (f *particleFlag) Set(value string) error {
 			fn[i] = f
 		}
 
-		f.gen = NewParticleGenerator(typ, fn...)
+		*f.gen = NewParticleGenerator(typ, fn...)
 	}
 
 	return nil
 }
 
-var j jumpFlag
-var p particleFlag
-
-func init() {
-	j = jumpFlag{jump:Jump, value:"Jump"}
-	flag.Var(&j, "JumpFunc", "jump function to use. One of Butler, Vondrak, Jump, or a commma-separated list of JumpMethods")
-
-	p = particleFlag{gen:ParticleGeneratorButler, value:"Butler"}
-	flag.Var(&p, "ParticleGenerator", "particle generator to use. One of Butler, Vondrak, or a commma-separated list of ParticleType and ParticleMutators")
-
-	flag.Float64Var(&Tau,"Tau", 6.7e4, "Photodestruction timescale in seconds")
+func JumpFlagVar(p *JumpFunc, name string, value string, usage string) {
+	f := jumpFlag{jump:p, value:value}
+	flag.Var(&f, name, usage)
 }
 
-func PrintFlags() {
-	flag.VisitAll( func(f *flag.Flag) {
-		fmt.Printf("# --%v=%v\n",f.Name,f.Value)
-	} )
+func JumpFlag() *JumpFunc {
+	var p JumpFunc = Jump
+	JumpFlagVar(&p, "JumpFunc", "Jump", "jump function to use. One of Butler, Vondrak, Jump, or a commma-separated list of JumpMethods")
+	return &p
 }
 
-func ParseFlags() (JumpFunc, ParticleGenerator) {
-	flag.Parse()
+func ParticleGeneratorFlagVar(p *ParticleGenerator, name string, value string, usage string) {
+	f := particleFlag{gen:p, value:value}
+	flag.Var(&f, name, usage)
+}
 
-	PrintFlags()
+func ParticleGeneratorFlag() *ParticleGenerator {
+	var p ParticleGenerator = ParticleGeneratorButler
+	ParticleGeneratorFlagVar(&p, "ParticleGenerator", "Butler", "particle generator to use. One of Butler, Vondrak, or a commma-separated list of ParticleType and ParticleMutators")
+	return &p
+}
+// func init() {
+// 	j = jumpFlag{jump:Jump, value:"Jump"}
+// 	flag.Var(&j, "JumpFunc", "jump function to use. One of Butler, Vondrak, Jump, or a commma-separated list of JumpMethods")
 
-	return j.jump, p.gen
+// 	p = particleFlag{gen:ParticleGeneratorButler, value:"Butler"}
+// 	flag.Var(&p, "ParticleGenerator", "particle generator to use. One of Butler, Vondrak, or a commma-separated list of ParticleType and ParticleMutators")
+
+// 	flag.Float64Var(&Tau,"Tau", 6.7e4, "Photodestruction timescale in seconds")
+// }
+
+func PrintFlag(f *flag.Flag) {
+	fmt.Printf("# -%v=%v\n",f.Name,f.Value)
 }
