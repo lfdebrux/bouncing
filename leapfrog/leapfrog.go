@@ -5,7 +5,7 @@ import "math"
 
 import . "github.com/lfdebrux/bouncing"
 
-const DT = 5e-4
+const dt = 5e-4
 
 type Point struct {
 	r vec.DenseVector
@@ -45,11 +45,11 @@ func (p *Point) Phi() float64 {
 
 func (p *Point) LeapFrog() {
 	for i := range p.r {
-		p.r[i] += p.v[i]*DT
+		p.r[i] += p.v[i]*dt
 	}
 
 	r2 := p.r.Dot(p.r)
-	a := -DT*MU/(r2*math.Sqrt(r2))
+	a := -dt*Mu/(r2*math.Sqrt(r2))
 
 	for i := range p.v {
 		p.v[i] += p.r[i]*a

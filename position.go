@@ -14,7 +14,7 @@ func ButlerPositionJump(j *J) *Lost {
 	phi0,beta0 := j.Phi,j.Beta
 	v,psi,thetadash := j.Velocity,j.Psi,j.ThetaDash
 
-	d := 2*math.Atan( 1 /( (VESC*VESC/(v*v))/(2*math.Sin(thetadash)*math.Cos(thetadash)) - math.Tan(thetadash) ) )
+	d := 2*math.Atan( 1 /( (Vesc*Vesc/(v*v))/(2*math.Sin(thetadash)*math.Cos(thetadash)) - math.Tan(thetadash) ) )
 
 	var e,phi,beta float64
 	if phi0 == 0 {
@@ -40,7 +40,7 @@ func VondrakPositionJump(j *J) *Lost {
 	phi0,beta0 := j.Phi,j.Beta
 	v,psi,thetadash := j.Velocity,j.Psi,j.ThetaDash
 
-	d := 2*math.Atan(math.Sin(2*thetadash)/((VESC/v)*(VESC/v)-1-math.Cos(2*thetadash)))
+	d := 2*math.Atan(math.Sin(2*thetadash)/((Vesc/v)*(Vesc/v)-1-math.Cos(2*thetadash)))
 	phi := math.Acos(math.Cos(phi0)*math.Cos(d) + math.Sin(phi0)*math.Sin(d)*math.Cos(psi))
 	e := math.Acos((math.Cos(d)-math.Cos(phi0)*math.Cos(phi))/(math.Sin(phi0)*math.Sin(phi)))
 

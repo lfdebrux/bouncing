@@ -69,7 +69,7 @@ func IsNaN(j *J) *Lost {
 }
 
 func IsLost(j *J) *Lost {
-	if j.Velocity > VESC {
+	if j.Velocity > Vesc {
 		return &Lost{fmt.Sprintf("loss: %v thermal escape, v=%f", j.Time, j.Velocity), ThermalEscape}
 	}
 	if l := IsNaN(j); l != nil {

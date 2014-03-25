@@ -132,7 +132,7 @@ func TestIsNaNMultiple(t *testing.T) {
 var names = map[LostType]string{Error:"Error", ThermalEscape:"ThermalEscape", Photodestruction:"Photodestruction", Capture:"Capture"}
 
 func TestThermalEscape(t *testing.T) {
-	j := &J{P:new(P), Velocity: 2*VESC}
+	j := &J{P:new(P), Velocity: 2*Vesc}
 
 	loss := IsLost(j)
 	t.Log(loss)

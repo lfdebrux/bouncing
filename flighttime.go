@@ -8,11 +8,11 @@ func FlightTime(j *J) *Lost {
 		j.FlightTime = 0
 		return nil
 	}
-	b := v*v*R/MU
+	b := v*v*R/Mu
 	g := 2 - b
 	o := math.Sin(thetadash)*math.Sin(thetadash)
 	e := math.Sqrt(1-b*g*o)
-	T := 2*math.Pi*math.Sqrt(R*R*R/(MU*g*g*g))
+	T := 2*math.Pi*math.Sqrt(R*R*R/(Mu*g*g*g))
 
 	t := T*( 1 - ( math.Acos((1-g)/e) - math.Sqrt( g*(2 - b*o - g) ) )/math.Pi )
 
@@ -28,7 +28,7 @@ func ButlerFlightTime(j *J) *Lost {
 		return nil
 	}
 	v0 := v*math.Cos(thetadash)
-	g := MU/(R*R)
+	g := Mu/(R*R)
 	h := R*v0*v0/(2*R*g - v0*v0)
 	a := v0*v0*R
 	b := v0*v0 - (2*R*g)
@@ -54,7 +54,7 @@ func VondrakFlightTime(j *J) *Lost {
 		return nil
 	}
 	vr := v*math.Cos(thetadash)
-	g := MU/(R*R)
+	g := Mu/(R*R)
 	z := vr*vr/(g*R)
 
 	t := 2*vr*(1 + (math.Pi/2 + math.Asin(z - 1))/math.Sqrt(z*(2-z)))/(g*(2-z))
@@ -66,13 +66,13 @@ func VondrakFlightTime(j *J) *Lost {
 
 func bruteforce(j *J) *Lost {
 	v,thetadash := j.Velocity,j.ThetaDash
-	a := R/(2 - v*v*R/MU)
+	a := R/(2 - v*v*R/Mu)
 	s := math.Sin(thetadash)*math.Sin(thetadash)*R*(2*a - R)/(a*a)
 	e := math.Sqrt( 1 - s )
 	o := math.Acos((a*s/R - 1)/e)
 	E := 2*math.Atan(math.Sqrt((1-e)/(1+e))*math.Tan(o/2))
 	M := E - e*math.Sin(E)
-	T := 2*math.Pi*math.Sqrt(a*a*a/MU)
+	T := 2*math.Pi*math.Sqrt(a*a*a/Mu)
 
 	M = 2*math.Pi - 2*M
 	t := M*T/(2*math.Pi)

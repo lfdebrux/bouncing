@@ -27,7 +27,7 @@ func RandVelocity(j *J) *Lost {
 
 	j.Velocity = Q.Eval(p)/a
 
-	if j.Velocity > VESC {
+	if j.Velocity > Vesc {
 		return &Lost{fmt.Sprintf("loss: thermal escape, v=%f",j.Velocity),ThermalEscape}
 	}
 
