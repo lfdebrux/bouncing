@@ -8,6 +8,10 @@ func FlightTime(j *J) *Lost {
 		j.FlightTime = 0
 		return nil
 	}
+	if v > Vesc {
+		j.FlightTime = 0
+		return NewLost("Velocity greater than Vesc", ThermalEscape)
+	}
 	b := v*v*R/Mu
 	g := 2 - b
 	o := math.Sin(thetadash)*math.Sin(thetadash)
