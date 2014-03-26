@@ -14,7 +14,8 @@ func RandInitialPositionButler(p *P) {
 func RandInitialPositionVondrak(p *P) {
 	p1, p2 := rand.Float64(), 2*math.Pi*rand.Float64()
 	p.Phi = math.Acos( math.Sqrt(p1)*math.Sin(p2) )
-	p.Beta = math.Asin( math.Sqrt(p1)*math.Cos(p2)/math.Sqrt(1-p1*math.Sin(p2)*math.Sin(p2)) )
+	beta := math.Asin( math.Sqrt(p1)*math.Cos(p2)/math.Sqrt(1-p1*math.Sin(p2)*math.Sin(p2)) )
+	p.Beta = toLongitude(beta)
 }
 
 func RandVelocity(j *J) *Lost {

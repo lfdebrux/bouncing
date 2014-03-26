@@ -63,6 +63,9 @@ func TestRandInitialPositionVondrakInRange(t *testing.T) {
 		if p.Phi >= math.Pi || 0 > p.Phi {
 			t.Fatalf("RandInitialPositionVondrak(p) => p.Phi = %f Pi; want 0..Pi",p.Phi/math.Pi)
 		}
+		if p.Beta < 0 {
+			t.Fatalf("RandInitialPositionVondrak(p), p.Beta should be > 0, instead got %f Pi", p.Beta/math.Pi)
+		}
 		if math.Pi/2 < p.Beta && p.Beta < 3*math.Pi/2 {
 			t.Fatalf("RandInitialPositionVondrak(p) => p.Beta = %f Pi; want 3Pi/2..Pi/2",p.Beta/math.Pi)
 		}
