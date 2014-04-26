@@ -20,7 +20,7 @@ const (
 
 type Lost struct {
 	err string
-	HowLost LostType
+	Type LostType
 }
 
 func (l *Lost) Error() string {
@@ -28,7 +28,7 @@ func (l *Lost) Error() string {
 }
 
 func NewLost(msg string, typ LostType) *Lost {
-	return &Lost{err:msg,HowLost:typ}
+	return &Lost{err:msg,Type:typ}
 }
 
 // TODO: reduce repition here
