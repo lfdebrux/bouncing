@@ -1,5 +1,8 @@
 package bouncing
 
+import "os"
+import "fmt"
+
 import "math"
 
 func toLongitude(beta float64) float64 {
@@ -22,7 +25,12 @@ func ButlerPositionJump(j *J) *Lost {
 		e = psi
 	} else {
 		phi = math.Acos(math.Cos(phi0)*math.Cos(d) + math.Sin(phi0)*math.Sin(d)*math.Cos(psi))
-		e = math.Acos((math.Cos(d) - math.Cos(phi)*math.Cos(phi0))/(math.Sin(phi)*math.Sin(phi0)))
+		e = (math.Cos(d) - math.Cos(phi)*math.Cos(phi0))/(math.Sin(phi)*math.Sin(phi0))
+		// clamp to prevent NaN from Acos
+		if e > 1 {
+			e = 1
+		}
+		e = math.Acos(e)
 	}
 	if psi > math.Pi {
 		beta = beta0 + e
