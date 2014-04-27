@@ -2,14 +2,16 @@ package bouncing
 
 import "math"
 
-func FlightTime(j *J) {
+func flightTimeMsg(j *J, flighttime float64) string {
+	fmt.Println("j", j.Time, j.Phi, j.Beta, flighttime)
+}
+
+func FlightTime(j *J) string {
 	v,thetadash := j.Velocity,j.ThetaDash
 	if v == 0 {
-		j.FlightTime = 0
 		return
 	}
 	if v > Vesc {
-		j.FlightTime = 0
 		return
 	}
 	b := v*v*R/Mu
@@ -20,13 +22,14 @@ func FlightTime(j *J) {
 
 	t := T*( 1 - ( math.Acos((1-g)/e) - math.Sqrt( g*(2 - b*o - g) ) )/math.Pi )
 
-	j.FlightTime = t
+	j.Time += t
+
+	return flightTimeMsg(j, t)
 }
 
-func ButlerFlightTime(j *J) {
+func ButlerFlightTime(j *J) string {
 	v,thetadash := j.Velocity,j.ThetaDash
 	if v == 0 {
-		j.FlightTime = 0
 		return
 	}
 	v0 := v*math.Cos(thetadash)
@@ -44,14 +47,14 @@ func ButlerFlightTime(j *J) {
 
 	t := hmax - h0
 
-	j.FlightTime = t
+	j.Time += t
 
+	return flightTimeMsg(j, t)
 }
 
-func VondrakFlightTime(j *J) {
+func VondrakFlightTime(j *J) string {
 	v,thetadash := j.Velocity,j.ThetaDash
 	if v == 0 {
-		j.FlightTime = 0
 		return
 	}
 	vr := v*math.Cos(thetadash)
@@ -60,10 +63,12 @@ func VondrakFlightTime(j *J) {
 
 	t := 2*vr*(1 + (math.Pi/2 + math.Asin(z - 1))/math.Sqrt(z*(2-z)))/(g*(2-z))
 
-	j.FlightTime = t
+	j.Time += t
+
+	return flightTimeMsg(j, t)
 }
 
-func bruteforce(j *J) {
+func bruteforce(j *J) string {
 	v,thetadash := j.Velocity,j.ThetaDash
 	a := R/(2 - v*v*R/Mu)
 	s := math.Sin(thetadash)*math.Sin(thetadash)*R*(2*a - R)/(a*a)
@@ -76,5 +81,7 @@ func bruteforce(j *J) {
 	M = 2*math.Pi - 2*M
 	t := M*T/(2*math.Pi)
 
-	j.FlightTime = t
+	j.Time += t
+
+	return flightTimeMsg(j, t)
 }
