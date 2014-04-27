@@ -119,14 +119,13 @@ func NewJump(funcs ...JumpMethod) JumpFunc {
 	return func(p *P) (*J, string) {
 		j := &J{P:p}
 		
+		msg := ""
 		for _,f := range funcs {
-			msg := f(j)
-			if msg != "" {
-				return j, msg
-			}
+			msg += f(j)
 		}
-
-		return j,CheckLost(j)
+		msg += CheckLost(j)
+		
+		return j, msg
 	}
 }
 
