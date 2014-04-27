@@ -37,5 +37,6 @@ func VondrakZenith(j *J) {
 		j.Time += (3*math.Pi/2 - j.Beta)*timeperrad
 		j.Beta = 3*math.Pi/2
 		j.SolarZenith = math.Pi/2
+		j.Type = NightSide
 	}
 }
