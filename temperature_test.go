@@ -79,11 +79,11 @@ func TestTemperatureSymmetric(t *testing.T) {
 
 func TestVondrakTemperatureNaN(t *testing.T) {
 	for solarzenith := 0.0; solarzenith < math.Pi; solarzenith += 0.1 {
-		temp, loss := testSolarZenithT(VondrakTemperature, solarzenith)
-		if math.IsNaN(temp) && loss == "" {
+		temp, msg := testSolarZenithT(VondrakTemperature, solarzenith)
+		if math.IsNaN(temp) && msg == "" {
 			t.Errorf("VondrakTemperature did not detect NaN temperature %v at solarzenith=%v",temp,solarzenith)
 		}
-		if !math.IsNaN(temp) && loss != "" {
+		if !math.IsNaN(temp) && msg != "" {
 			t.Errorf("VondrakTemperature falsely detected NaN temperature at solarzenith=%v, temperature=%v",solarzenith,temp)
 		}
 	}

@@ -59,12 +59,12 @@ func Jump(p *P) (*J, string) {
 
 	j.Time += j.FlightTime
 
-	loss := CheckLost(j)
-	if loss == "" {
-		loss = CaptureButler(j)
+	msg := CheckLost(j)
+	if msg == "" {
+		msg = CaptureButler(j)
 	}
 
-	return j, loss
+	return j, msg
 }
 
 func JumpWithVondrak(p *P) (*J,  string) {
@@ -78,12 +78,12 @@ func JumpWithVondrak(p *P) (*J,  string) {
 
 	j.Time += j.FlightTime
 
-	loss := CheckLost(j)
-	if loss == "" {
-		loss = CaptureVondrak(j)
+	msg := CheckLost(j)
+	if msg == "" {
+		msg = CaptureVondrak(j)
 	}
 
-	return j, loss
+	return j, msg
 }
 
 func ButlerJump(p *P) (*J,  string) {
@@ -96,12 +96,12 @@ func ButlerJump(p *P) (*J,  string) {
 
 	j.Time += j.FlightTime
 
-	loss := CheckLost(j)
-	if loss == "" {
-		loss = CaptureButler(j)
+	msg := CheckLost(j)
+	if msg == "" {
+		msg = CaptureButler(j)
 	}
 
-	return j, loss
+	return j, msg
 }
 
 func VondrakJump(p *P) (*J, string) {
@@ -115,12 +115,12 @@ func VondrakJump(p *P) (*J, string) {
 
 	j.Time += j.FlightTime
 
-	loss := CheckLost(j)
-	if loss == "" {
-		loss = CaptureVondrak(j)
+	msg := CheckLost(j)
+	if msg == "" {
+		msg = CaptureVondrak(j)
 	}
 
-	return j, loss
+	return j, msg
 }
 
 func NewJump(funcs ...JumpMethod) JumpFunc {
@@ -128,9 +128,9 @@ func NewJump(funcs ...JumpMethod) JumpFunc {
 		j := &J{P:p}
 		
 		for _,f := range funcs {
-			loss := f(j)
-			if loss != "" {
-				return j,loss
+			msg := f(j)
+			if msg != "" {
+				return j, msg
 			}
 		}
 
