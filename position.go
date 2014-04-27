@@ -1,8 +1,5 @@
 package bouncing
 
-import "os"
-import "fmt"
-
 import "math"
 
 func toLongitude(beta float64) float64 {
@@ -13,7 +10,7 @@ func toLongitude(beta float64) float64 {
 	return beta
 }
 
-func ButlerPositionJump(j *J) *Lost {
+func ButlerPositionJump(j *J) {
 	phi0,beta0 := j.Phi,j.Beta
 	v,psi,thetadash := j.Velocity,j.Psi,j.ThetaDash
 
@@ -40,11 +37,9 @@ func ButlerPositionJump(j *J) *Lost {
 	
 	j.Phi = phi
 	j.Beta = toLongitude(beta)
-
-	return nil
 }
 
-func VondrakPositionJump(j *J) *Lost {
+func VondrakPositionJump(j *J) {
 	phi0,beta0 := j.Phi,j.Beta
 	v,psi,thetadash := j.Velocity,j.Psi,j.ThetaDash
 
@@ -62,6 +57,4 @@ func VondrakPositionJump(j *J) *Lost {
 	
 	j.Phi = phi
 	j.Beta = toLongitude(beta)
-
-	return nil
 }

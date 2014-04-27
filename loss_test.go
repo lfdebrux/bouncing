@@ -4,10 +4,10 @@ import "testing"
 
 import "math"
 
-func BenchmarkIsLost(b *testing.B) {
+func BenchmarkCheckLost(b *testing.B) {
 	j := newJ()
 	for i := 0; i < b.N; i++ {
-		IsLost(j)
+		CheckLost(j)
 	}
 }
 
@@ -16,8 +16,8 @@ func percentPhoto(j *J) float64 {
 	j.Velocity = 0
 	var count float64
 	for i := 0; i < NUM; i++ {
-		if l := IsLost(j); l != nil {
-			if l.HowLost == Photodestruction {
+		if e := CheckLost(j); e != "" {
+			if j.Type == Photodestruction {
 				count++
 			} else {
 				panic("loss_test: percentPhoto: should only be able to lose particles to Photodestruction")
@@ -51,7 +51,7 @@ func TestIsPhotoTau(t *testing.T) {
 func percentCapture(j *J) float64 {
 	var count float64
 	for i := 0; i < NUM; i++ {
-		if l := IsCaptureButler(j); l != nil {
+		if l := CaptureButler(j); l != "" {
 			count++
 		}
 	}
@@ -99,44 +99,42 @@ func TestIsCaptureExpectedValues(t *testing.T) {
 	}
 }
 
-func BenchmarkIsNaN(b *testing.B) {
+func BenchmarkCheckNaN(b *testing.B) {
 	j := &J{P:new(P)}
 	j.Phi = math.NaN()
 	for i := 0; i < b.N; i++ {
-		IsNaN(j)
+		CheckNaN(j)
 	}
 }
 
-func TestIsNaN(t *testing.T) {
+func TestCheckNaN(t *testing.T) {
 	j := &J{P:new(P)}
 	j.Phi = math.NaN()
-	loss := IsNaN(j)
-	if loss == nil || loss.HowLost != Error {
-		t.Errorf("IsNaN did not detect NaN, loss=%v", loss)
-	} else if loss.Error() != "loss: j.Phi is NaN" {
-		t.Errorf("IsNaN did not detect correct NaN, loss=%v", loss)
+	err := CheckNaN(j)
+	if err == "" || j.Type != Error {
+		t.Errorf("CheckNaN did not detect NaN: %s", err)
+	} else if err != "e j.Phi is NaN" {
+		t.Errorf("CheckNaN did not detect correct NaN: %s", err)
 	}
 }
 
-func TestIsNaNMultiple(t *testing.T) {
+func TestCheckNaNMultiple(t *testing.T) {
 	j := &J{P:new(P)}
 	j.Beta = math.NaN()
 	j.Temperature = math.NaN()
 
-	loss := IsNaN(j)
-	if loss == nil || loss.Error() != "loss: j.Beta is NaN j.Temperature is NaN" {
-		t.Errorf("IsNaN did not correctly detect multiple NaN, loss=%v",loss)
+	err := CheckNaN(j)
+	if err == "" || err != "e j.Beta is NaN j.Temperature is NaN" {
+		t.Errorf("CheckNaN did not correctly detect multiple NaN: %s",err)
 	}
 }
-
-var names = map[LostType]string{Error:"Error", ThermalEscape:"ThermalEscape", Photodestruction:"Photodestruction", Capture:"Capture"}
 
 func TestThermalEscape(t *testing.T) {
 	j := &J{P:new(P), Velocity: 2*Vesc}
 
-	loss := IsLost(j)
-	t.Log(loss)
-	if loss.HowLost != ThermalEscape {
-		t.Errorf("Expecting j.HowLost = %s not ThermalEscape", names[loss.HowLost])
+	err := CheckLost(j)
+	t.Log(err)
+	if j.Type != ThermalEscape {
+		t.Errorf("Expecting j.Type = ThermalEscape (%d), not %d", ThermalEscape, j.Type)
 	}
 }

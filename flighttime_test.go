@@ -34,7 +34,7 @@ func TestButlerFlightTimeZero(t *testing.T) {
 	}
 }
 
-func VaryFlightTime(f JumpMethod, cb func(v,a,t float64)) {
+func VaryFlightTime(f JumpMethodSimple, cb func(v,a,t float64)) {
 	jump := new(J)
 	const NUM = 1000
 	for i := 1; i < NUM; i++ {

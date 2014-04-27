@@ -1,16 +1,55 @@
 package bouncing
 
+type JumpType int
+
+const (
+	_ = iota
+
+	isJump JumpType = iota	// marker
+	NightSide
+
+	isLost					// marker
+	ThermalEscape
+	Photodestruction
+	Capture
+	Error
+)
+
 type J struct {
 	*P
+	Type JumpType
 	Velocity,Psi,ThetaDash float64
 	Temperature float64
 	FlightTime float64
 }
 
-type JumpMethod func(*J) *Lost
-type JumpFunc func(*P) (*J,*Lost)
+type JumpMethodSimple func(*J)
+type JumpMethod func(*J) string
+type JumpFunc func(*P) (*J, string)
 
-func Jump(p *P) (*J,*Lost) {
+func lift(f JumpMethodSimple) JumpMethod {
+	return func(j *J) string {
+		f(j)
+		return ""
+	}
+}
+
+func liftAll(fs ...interface{}) []JumpMethod {
+	out := make([]JumpMethod, len(fs))
+	for i, f := range fs {
+		switch f := f.(type) {
+		case func(*J):
+			out[i] = lift(f)
+		case func(*J) string:
+			out[i] = f
+		default:
+			panic("arguments must be JumpMethod or JumpMethodSimple")
+		}
+	}
+	return out
+}
+
+func Jump(p *P) (*J, string) {
 	j := &J{P:p}
 	ButlerTemperature(j)
 	RandVelocity(j)
@@ -20,15 +59,15 @@ func Jump(p *P) (*J,*Lost) {
 
 	j.Time += j.FlightTime
 
-	loss := IsLost(j)
-	if loss == nil {
-		loss = IsCaptureButler(j)
+	loss := CheckLost(j)
+	if loss == "" {
+		loss = CaptureButler(j)
 	}
 
 	return j, loss
 }
 
-func JumpWithVondrak(p *P) (*J, *Lost) {
+func JumpWithVondrak(p *P) (*J,  string) {
 	j := &J{P:p}
 	VondrakZenith(j)
 	VondrakTemperature(j)
@@ -39,15 +78,15 @@ func JumpWithVondrak(p *P) (*J, *Lost) {
 
 	j.Time += j.FlightTime
 
-	loss := IsLost(j)
-	if loss == nil {
-		loss = IsCaptureVondrak(j)
+	loss := CheckLost(j)
+	if loss == "" {
+		loss = CaptureVondrak(j)
 	}
 
 	return j, loss
 }
 
-func ButlerJump(p *P) (*J, *Lost) {
+func ButlerJump(p *P) (*J,  string) {
 	j := &J{P:p}
 	ButlerTemperature(j)
 	RandVelocity(j)
@@ -57,15 +96,15 @@ func ButlerJump(p *P) (*J, *Lost) {
 
 	j.Time += j.FlightTime
 
-	loss := IsLost(j)
-	if loss == nil {
-		loss = IsCaptureButler(j)
+	loss := CheckLost(j)
+	if loss == "" {
+		loss = CaptureButler(j)
 	}
 
 	return j, loss
 }
 
-func VondrakJump(p *P) (*J,*Lost) {
+func VondrakJump(p *P) (*J, string) {
 	j := &J{P:p}
 	VondrakZenith(j)
 	VondrakTemperature(j)
@@ -76,27 +115,31 @@ func VondrakJump(p *P) (*J,*Lost) {
 
 	j.Time += j.FlightTime
 
-	loss := IsLost(j)
-	if loss == nil {
-		loss = IsCaptureVondrak(j)
+	loss := CheckLost(j)
+	if loss == "" {
+		loss = CaptureVondrak(j)
 	}
 
 	return j, loss
 }
 
 func NewJump(funcs ...JumpMethod) JumpFunc {
-	return func(p *P) (*J,*Lost) {
+	return func(p *P) (*J, string) {
 		j := &J{P:p}
 		
 		for _,f := range funcs {
 			loss := f(j)
-			if loss != nil {
+			if loss != "" {
 				return j,loss
 			}
 		}
 
 		j.Time += j.FlightTime
 
-		return j,IsLost(j)
+		return j,CheckLost(j)
 	}
+}
+
+func NewJumpSimple(funcs ...interface{}) JumpFunc {
+	return NewJump(liftAll(funcs...)...)
 }

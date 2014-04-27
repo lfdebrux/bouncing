@@ -8,13 +8,13 @@ import (
 )
 
 var customJumpMethods = map[string]JumpMethod {
-	"TemperatureButler": ButlerTemperature, "TemperatureVondrak": VondrakTemperature,
+	"TemperatureButler": lift(ButlerTemperature), "TemperatureVondrak": VondrakTemperature,
 	"RandVelocity": RandVelocity,
-	"RandDirection": RandDirection, "RandDirectionButler": ButlerRandDirection, "RandDirectionVondrak": ButlerRandDirection,
-	"PositionJumpButler": ButlerPositionJump, "PositionJumpVondrak": VondrakPositionJump,
-	"FlightTime": FlightTime, "FlightTimeButler": VondrakFlightTime, "FlightTimeVondrak": VondrakFlightTime,
-	"IsLost": IsLost,
-	"IsCaptureButler": IsCaptureButler, "IsCaptureVondrak": IsCaptureVondrak,
+	"RandDirection": lift(RandDirection), "RandDirectionButler": lift(ButlerRandDirection), "RandDirectionVondrak": lift(ButlerRandDirection),
+	"PositionJumpButler": lift(ButlerPositionJump), "PositionJumpVondrak": lift(VondrakPositionJump),
+	"FlightTime": lift(FlightTime), "FlightTimeButler": lift(VondrakFlightTime), "FlightTimeVondrak": lift(VondrakFlightTime),
+	"CheckLost": CheckLost,
+	"CaptureButler": CaptureButler, "CaptureVondrak": CaptureVondrak,
 }
 
 type jumpFlag struct {
@@ -37,7 +37,7 @@ func (f *jumpFlag) Set(value string) error {
 		*f.jump = VondrakJump
 	case "JumpWithVondrak":
 		*f.jump = JumpWithVondrak
-		f.value = "JumpWithVondrak=VondrakZenith;VondrakTemperature;RandVelocity;RandDirection;ButlerPositionJump;FlightTime;IsLost;IsCaptureVondrak"
+		f.value = "JumpWithVondrak=VondrakZenith;VondrakTemperature;RandVelocity;RandDirection;ButlerPositionJump;FlightTime;CheckLost;CaptureVondrak"
 	default:
 		vs := strings.Split(value, ",")
 		fn := make([]JumpMethod, len(vs))
