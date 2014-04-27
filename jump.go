@@ -57,8 +57,6 @@ func Jump(p *P) (*J, string) {
 	ButlerPositionJump(j)
 	FlightTime(j)
 
-	j.Time += j.FlightTime
-
 	msg := CheckLost(j)
 	if msg == "" {
 		msg = CaptureButler(j)
@@ -76,8 +74,6 @@ func JumpWithVondrak(p *P) (*J,  string) {
 	ButlerPositionJump(j)
 	FlightTime(j)
 
-	j.Time += j.FlightTime
-
 	msg := CheckLost(j)
 	if msg == "" {
 		msg = CaptureVondrak(j)
@@ -93,8 +89,6 @@ func ButlerJump(p *P) (*J,  string) {
 	ButlerRandDirection(j)
 	ButlerPositionJump(j)
 	VondrakFlightTime(j) // ButlerFlightTime is NaNy
-
-	j.Time += j.FlightTime
 
 	msg := CheckLost(j)
 	if msg == "" {
@@ -112,8 +106,6 @@ func VondrakJump(p *P) (*J, string) {
 	ButlerRandDirection(j)
 	VondrakPositionJump(j)
 	VondrakFlightTime(j)
-
-	j.Time += j.FlightTime
 
 	msg := CheckLost(j)
 	if msg == "" {
@@ -133,8 +125,6 @@ func NewJump(funcs ...JumpMethod) JumpFunc {
 				return j, msg
 			}
 		}
-
-		j.Time += j.FlightTime
 
 		return j,CheckLost(j)
 	}

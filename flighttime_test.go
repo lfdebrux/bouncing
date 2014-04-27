@@ -34,15 +34,15 @@ func TestButlerFlightTimeZero(t *testing.T) {
 	}
 }
 
-func VaryFlightTime(f JumpMethodSimple, cb func(v,a,t float64)) {
-	jump := new(J)
+func VaryFlightTime(f JumpMethod, cb func(v,a,t float64)) {
+	jump := &J{P:&P{}}
 	const NUM = 1000
 	for i := 1; i < NUM; i++ {
 		for j := 0; j < NUM; j++ {
 			jump.Velocity = (2300)*float64(i)/(NUM-1)
 			jump.ThetaDash = math.Pi/2*float64(j)/NUM
 			f(jump)
-			cb(jump.Velocity,jump.ThetaDash,jump.FlightTime)
+			cb(jump.Velocity, jump.ThetaDash, jump.FlightTime)
 		}
 	}
 }

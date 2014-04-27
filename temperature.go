@@ -1,6 +1,10 @@
 package bouncing
 
-import "math"
+import (
+	_ "fmt"
+	"math"
+	_ "math/rand"
+)
 
 const (
 	ButlerT0 = 151.0 // Kelvin
@@ -19,3 +23,11 @@ func VondrakTemperature(j *J) string {
 	}
 	return ""
 }
+
+// func TemperatureResidence(j *J) string {
+// 	// generate a random time to thermally accomodate before being desorped
+// 	decayrate := // TODO
+// 	t = -math.Log(1 - rand.Float64())/decayrate
+// 	j.Time += t
+// 	return fmt.Sprintln("r", j.Time, j.Phi, j.Beta, t, "thermally accomodating")
+// }

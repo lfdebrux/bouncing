@@ -12,7 +12,7 @@ var customJumpMethods = map[string]JumpMethod {
 	"RandVelocity": RandVelocity,
 	"RandDirection": lift(RandDirection), "RandDirectionButler": lift(ButlerRandDirection), "RandDirectionVondrak": lift(ButlerRandDirection),
 	"PositionJumpButler": lift(ButlerPositionJump), "PositionJumpVondrak": lift(VondrakPositionJump),
-	"FlightTime": lift(FlightTime), "FlightTimeButler": lift(VondrakFlightTime), "FlightTimeVondrak": lift(VondrakFlightTime),
+	"FlightTime": FlightTime, "FlightTimeButler": VondrakFlightTime, "FlightTimeVondrak": VondrakFlightTime,
 	"CheckLost": CheckLost,
 	"CaptureButler": CaptureButler, "CaptureVondrak": CaptureVondrak,
 }
