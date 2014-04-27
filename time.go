@@ -1,5 +1,6 @@
 package bouncing
 
+import "fmt"
 import "math"
 
 const timeperrad = 375704 // LunarDay/2pi // seconds/rad
@@ -31,11 +32,14 @@ func TimeToSunrise(time, phi, beta float64) float64 {
 
 // Zenith angle with Sun fixed above longitude 0
 // skip ahead if on nightside
-func VondrakZenith(j *J) {
+func VondrakZenith(j *J) string {
 	if math.Pi/2 < j.Beta && j.Beta < 3*math.Pi/2 {
 		j.Time += (3*math.Pi/2 - j.Beta)*timeperrad
 		j.Beta = 3*math.Pi/2 + 1e-5 // ensure > 3pi/2
 		j.Type = NightSide
+		j.SolarZenith = math.Acos( math.Sin(j.Phi)*math.Cos(j.Beta) )
+		return fmt.Sprintln("d", j.Time, j.Phi, j.Beta)
 	}
 	j.SolarZenith = math.Acos( math.Sin(j.Phi)*math.Cos(j.Beta) )
+	return ""
 }
