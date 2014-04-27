@@ -32,11 +32,10 @@ func TimeToSunrise(time, phi, beta float64) float64 {
 // Zenith angle with Sun fixed above longitude 0
 // skip ahead if on nightside
 func VondrakZenith(j *J) {
-	j.SolarZenith = math.Acos( math.Sin(j.Phi)*math.Cos(j.Beta) )
-	if j.SolarZenith > math.Pi/2 {
+	if math.Pi/2 < j.Beta && j.Beta < 3*math.Pi/2 {
 		j.Time += (3*math.Pi/2 - j.Beta)*timeperrad
-		j.Beta = 3*math.Pi/2
-		j.SolarZenith = math.Pi/2
+		j.Beta = 3*math.Pi/2 + 1e-5 // ensure > 3pi/2
 		j.Type = NightSide
 	}
+	j.SolarZenith = math.Acos( math.Sin(j.Phi)*math.Cos(j.Beta) )
 }
