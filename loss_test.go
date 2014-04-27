@@ -113,7 +113,7 @@ func TestCheckNaN(t *testing.T) {
 	err := CheckNaN(j)
 	if err == "" || j.Type != Error {
 		t.Errorf("CheckNaN did not detect NaN: %s", err)
-	} else if err != "e j.Phi is NaN" {
+	} else if err != "e j.Phi is NaN\n" {
 		t.Errorf("CheckNaN did not detect correct NaN: %s", err)
 	}
 }
@@ -124,7 +124,7 @@ func TestCheckNaNMultiple(t *testing.T) {
 	j.Temperature = math.NaN()
 
 	err := CheckNaN(j)
-	if err == "" || err != "e j.Beta is NaN j.Temperature is NaN" {
+	if err == "" || err != "e j.Beta is NaN j.Temperature is NaN\n" {
 		t.Errorf("CheckNaN did not correctly detect multiple NaN: %s",err)
 	}
 }
