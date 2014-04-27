@@ -20,13 +20,13 @@ func NewLost(j *J, typ JumpType) string {
 	j.Type = typ
 	switch typ {
 	case ThermalEscape:
-		return fmt.Sprintf("l %v thermal escape, v=%f", j.Time, j.Velocity)
+		return fmt.Sprintf("l %v thermal escape, v=%f\n", j.Time, j.Velocity)
 	case Photodestruction:
-		return fmt.Sprintf("l %v photodestruction, flighttime=%f", j.Time, j.FlightTime)
+		return fmt.Sprintf("l %v photodestruction, flighttime=%f\n", j.Time, j.FlightTime)
 	case Capture:
-		return fmt.Sprintf("l %v capture by stable region, (beta, phi)=(%v, %v)", j.Time, j.Beta, j.Phi)
+		return fmt.Sprintf("l %v capture by stable region, (beta, phi)=(%v, %v)\n", j.Time, j.Beta, j.Phi)
 	default:
-		return fmt.Sprintf("l %v", j.Time)
+		return fmt.Sprintln("l", j.Time)
 	}
 }
 
@@ -105,6 +105,7 @@ func CheckNaN(j *J) string {
 		return ""
 	}
 	j.Type = Error
+	msg += "\n"
 	return msg
 }
 
@@ -154,6 +155,7 @@ func CheckSanity(j *J) string {
 	if msg == "e" {
 		return ""
 	}
+	msg += "\n"
 	j.Type = Error
 	return msg
 }

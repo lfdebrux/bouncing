@@ -30,7 +30,7 @@ func TestButlerFlightTimeZero(t *testing.T) {
 	j := makeFlightJ(0,0)
 	ButlerFlightTime(j)
 	if j.FlightTime != 0 {
-		t.Errorf("Expected flight time with v=0 using Butler equation to be 0, instead got %f",j.FlightTime)
+		t.Errorf("Expected flight time with v=0 using Butler equation to be 0, instead got %f", j.FlightTime)
 	}
 }
 

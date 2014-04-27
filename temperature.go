@@ -19,7 +19,7 @@ func VondrakTemperature(j *J) string {
 	j.Temperature = 280 * math.Pow(math.Cos(j.SolarZenith),0.25) + 100
 	// Temperature is complex if SolarZenith > pi/2, so Pow retuns NaN
 	if j.SolarZenith > math.Pi/2 {
-		return "e NaN VondrakTemperature, SolarZenith is greater than pi/2"
+		return "e NaN VondrakTemperature, SolarZenith is greater than pi/2\n"
 	}
 	return ""
 }
