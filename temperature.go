@@ -35,7 +35,7 @@ func KillenTemperature(j *J) {
 	}
 }
 
-func TemperatureResidence(j *J) string {
+func ThermalResidence(j *J) string {
 	// generate a random time to thermally accomodate before being desorped
 	rate := 1e13*math.Exp(-5802.26/j.Temperature)
 	t := -math.Log(1 - rand.Float64())/rate
