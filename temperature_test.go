@@ -88,3 +88,15 @@ func TestVondrakTemperatureNaN(t *testing.T) {
 		}
 	}
 }
+
+func TestThermalResidencePositive(t *testing.T) {
+	j := newJ()
+	for i := 0; i < NUM; i++ {
+		j.Time = 0
+		j.Temperature = 300*rand.Float64() + 100
+		ThermalResidence(j)
+		if j.Time < 0 {
+			t.Errorf("ThermalResidence time should be positive, but ThermalResidence(T=%v) -> t=%v", j.Temperature, j.Time)
+		}
+	}
+}
