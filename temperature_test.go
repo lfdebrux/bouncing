@@ -9,16 +9,16 @@ func makeTempJ(phi float64) *J {
 	return &J{P:&P{Phi:phi}}
 }
 
-func testT(f JumpMethod,phi float64) float64 {
+func testT(f JumpMethodSimple,phi float64) float64 {
 	j := makeTempJ(phi)
 	f(j)
 	return j.Temperature
 }
 
-func testSolarZenithT(f JumpMethod, solarzenith float64) (float64, *Lost) {
+func testSolarZenithT(f JumpMethod, solarzenith float64) (float64, string) {
 	j := &J{P:&P{SolarZenith:solarzenith}}
-	loss := f(j)
-	return j.Temperature,loss
+	err := f(j)
+	return j.Temperature, err
 }
 
 func BenchmarkTemperature(b *testing.B) {
@@ -79,12 +79,24 @@ func TestTemperatureSymmetric(t *testing.T) {
 
 func TestVondrakTemperatureNaN(t *testing.T) {
 	for solarzenith := 0.0; solarzenith < math.Pi; solarzenith += 0.1 {
-		temp, loss := testSolarZenithT(VondrakTemperature, solarzenith)
-		if math.IsNaN(temp) && loss == nil {
+		temp, msg := testSolarZenithT(VondrakTemperature, solarzenith)
+		if math.IsNaN(temp) && msg == "" {
 			t.Errorf("VondrakTemperature did not detect NaN temperature %v at solarzenith=%v",temp,solarzenith)
 		}
-		if !math.IsNaN(temp) && loss != nil {
+		if !math.IsNaN(temp) && msg != "" {
 			t.Errorf("VondrakTemperature falsely detected NaN temperature at solarzenith=%v, temperature=%v",solarzenith,temp)
+		}
+	}
+}
+
+func TestThermalResidencePositive(t *testing.T) {
+	j := newJ()
+	for i := 0; i < NUM; i++ {
+		j.Time = 0
+		j.Temperature = 300*rand.Float64() + 100
+		ThermalResidence(j)
+		if j.Time < 0 {
+			t.Errorf("ThermalResidence time should be positive, but ThermalResidence(T=%v) -> t=%v", j.Temperature, j.Time)
 		}
 	}
 }

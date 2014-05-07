@@ -1,7 +1,6 @@
 package bouncing
 
 import (
-	"fmt"
 	"math"
 	"math/rand"
 )
@@ -18,8 +17,8 @@ func RandInitialPositionVondrak(p *P) {
 	p.Beta = toLongitude(beta)
 }
 
-func RandVelocity(j *J) *Lost {
-	m,temp := Mass[j.Type],j.Temperature
+func RandVelocity(j *J) string {
+	m,temp := Mass[j.P.Type],j.Temperature
 	if Q == nil {
 		InitMaxwellian()
 	}
@@ -29,20 +28,18 @@ func RandVelocity(j *J) *Lost {
 	j.Velocity = Q.Eval(p)/a
 
 	if j.Velocity > Vesc {
-		return &Lost{fmt.Sprintf("loss: thermal escape, v=%f",j.Velocity),ThermalEscape}
+		return NewLost(j, ThermalEscape)
 	}
 
-	return nil
+	return ""
 }
 
-func RandDirection(j *J) *Lost {
+func RandDirection(j *J) {
 	j.Psi = 2*math.Pi*rand.Float64()
 	j.ThetaDash = math.Acos(rand.Float64())
-	return nil
 }
 
-func ButlerRandDirection(j *J) *Lost {
+func ButlerRandDirection(j *J) {
 	j.Psi = 2*math.Pi*rand.Float64()
 	j.ThetaDash = rand.Float64()*math.Pi/2
-	return nil
 }

@@ -1,16 +1,19 @@
 package bouncing
 
+import "fmt"
 import "math"
 
-func FlightTime(j *J) *Lost {
+func flightTimeMsg(j *J, flighttime float64) string {
+	return fmt.Sprintln("j", j.Time, j.Phi, j.Beta, flighttime)
+}
+
+func FlightTime(j *J) string {
 	v,thetadash := j.Velocity,j.ThetaDash
 	if v == 0 {
-		j.FlightTime = 0
-		return nil
+		return ""
 	}
 	if v > Vesc {
-		j.FlightTime = 0
-		return NewLost("Velocity greater than Vesc", ThermalEscape)
+		return ""
 	}
 	b := v*v*R/Mu
 	g := 2 - b
@@ -21,15 +24,16 @@ func FlightTime(j *J) *Lost {
 	t := T*( 1 - ( math.Acos((1-g)/e) - math.Sqrt( g*(2 - b*o - g) ) )/math.Pi )
 
 	j.FlightTime = t
+	j.Time += t
 
-	return nil
+	return flightTimeMsg(j, t)
 }
 
-func ButlerFlightTime(j *J) *Lost {
+func ButlerFlightTime(j *J) string {
 	v,thetadash := j.Velocity,j.ThetaDash
 	if v == 0 {
 		j.FlightTime = 0
-		return nil
+		return ""
 	}
 	v0 := v*math.Cos(thetadash)
 	g := Mu/(R*R)
@@ -47,15 +51,16 @@ func ButlerFlightTime(j *J) *Lost {
 	t := hmax - h0
 
 	j.FlightTime = t
+	j.Time += t
 
-	return nil
+	return flightTimeMsg(j, t)
 }
 
-func VondrakFlightTime(j *J) *Lost {
+func VondrakFlightTime(j *J) string {
 	v,thetadash := j.Velocity,j.ThetaDash
 	if v == 0 {
 		j.FlightTime = 0
-		return nil
+		return ""
 	}
 	vr := v*math.Cos(thetadash)
 	g := Mu/(R*R)
@@ -64,11 +69,12 @@ func VondrakFlightTime(j *J) *Lost {
 	t := 2*vr*(1 + (math.Pi/2 + math.Asin(z - 1))/math.Sqrt(z*(2-z)))/(g*(2-z))
 
 	j.FlightTime = t
+	j.Time += t
 
-	return nil
+	return flightTimeMsg(j, t)
 }
 
-func bruteforce(j *J) *Lost {
+func bruteforce(j *J) string {
 	v,thetadash := j.Velocity,j.ThetaDash
 	a := R/(2 - v*v*R/Mu)
 	s := math.Sin(thetadash)*math.Sin(thetadash)*R*(2*a - R)/(a*a)
@@ -82,6 +88,7 @@ func bruteforce(j *J) *Lost {
 	t := M*T/(2*math.Pi)
 
 	j.FlightTime = t
+	j.Time += t
 
-	return nil
+	return flightTimeMsg(j, t)
 }

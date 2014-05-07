@@ -20,11 +20,11 @@ func TestVondrakJump(t *testing.T) {
 	VondrakJump(p)
 }
 
-func TestNewJump(t *testing.T) {
+func TestNewJumpSimple(t *testing.T) {
 	InitMaxwellian()
 	defer FreeMaxwellian()
 
-	jump := NewJump(ButlerTemperature,RandVelocity,RandDirection,ButlerPositionJump,FlightTime)
+	jump := NewJumpSimple(ButlerTemperature,RandVelocity,RandDirection,ButlerPositionJump,FlightTime)
 	p := new(P)
 	
 
@@ -55,11 +55,11 @@ func BenchmarkVondrakJump(b *testing.B) {
 	}
 }
 
-func BenchmarkNewJump(b *testing.B) {
+func BenchmarkNewJumpSimple(b *testing.B) {
 	InitMaxwellian()
 	defer FreeMaxwellian()
 	
-	jump := NewJump(ButlerTemperature,RandVelocity,RandDirection,ButlerPositionJump,FlightTime)
+	jump := NewJumpSimple(ButlerTemperature,RandVelocity,RandDirection,ButlerPositionJump,FlightTime)
 
 	p := new(P)
 	

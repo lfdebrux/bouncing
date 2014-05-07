@@ -5,6 +5,7 @@ type ParticleType int
 const (
 	Water ParticleType = iota
 	Hydrogen
+	Argon
 )
 
 const amu = 1.660538921e-27 // kg
@@ -12,6 +13,7 @@ const amu = 1.660538921e-27 // kg
 var Mass = map[ParticleType]float64{
 	Water: 18*amu,
 	Hydrogen: 1*amu,
+	Argon: 40*amu,
 }
 
 type P struct {

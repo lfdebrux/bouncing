@@ -30,19 +30,19 @@ func TestButlerFlightTimeZero(t *testing.T) {
 	j := makeFlightJ(0,0)
 	ButlerFlightTime(j)
 	if j.FlightTime != 0 {
-		t.Errorf("Expected flight time with v=0 using Butler equation to be 0, instead got %f",j.FlightTime)
+		t.Errorf("Expected flight time with v=0 using Butler equation to be 0, instead got %f", j.FlightTime)
 	}
 }
 
 func VaryFlightTime(f JumpMethod, cb func(v,a,t float64)) {
-	jump := new(J)
+	jump := &J{P:&P{}}
 	const NUM = 1000
 	for i := 1; i < NUM; i++ {
 		for j := 0; j < NUM; j++ {
 			jump.Velocity = (2300)*float64(i)/(NUM-1)
 			jump.ThetaDash = math.Pi/2*float64(j)/NUM
 			f(jump)
-			cb(jump.Velocity,jump.ThetaDash,jump.FlightTime)
+			cb(jump.Velocity, jump.ThetaDash, jump.FlightTime)
 		}
 	}
 }
